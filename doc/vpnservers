@@ -1,0 +1,7 @@
+# line; technik; net/24
+dhcp01a;openvpn;198.18.251.0
+dhcp02a;openvpn;198.18.252.0
+dhcp03a;openvpn;198.18.253.0
+g01n03a;openvpn;198.18.13.0
+g05n03a;openvpn;198.18.53.0
+g08n05a;openvpn;198.18.85.0
