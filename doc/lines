@@ -15,9 +15,6 @@ g05n02;  g05n02a; eth0;         89.163.224.133; 300MBit/s DECIX
 g05n02;  g05n02b; eth0;   2001:4ba0:ffec:83::1; 300MBit/s DECIX
 g05n03;  g05n03a; eth0;         93.186.197.153; 300MBit/s DECIX
 g05n03;  g05n03b; eth0;  2001:4ba0:ffff:150::1; 300MBit/s DECIX
-g05n04;  g05n04a; eth0;          178.32.223.43; 100MBit/s, OVH Paris
-g06n01;  g06n01a; eth0;            51.15.56.71; 200MBit/s, Scaleway Amsterdam
-g06n02;  g06n02a; eth0;           51.15.49.251; 200MBit/s, Scaleway Amsterdam
 g08n01;  g08n01a; eth0;             81.7.8.106; 100MBit/s, EUSERV
 g08n02;  g08n02a; eth0;                      -; 100MBit/s, AS16276 OVH Strassburg
 g08n03;  g08n03a; eth0;                      -; 100MBit/s, OVH Strassburg, bald Scaleway
