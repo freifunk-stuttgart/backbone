@@ -35,6 +35,11 @@ dhcp03a:g08n03a;openvpn;1
 dhcp03a:g08n04a;openvpn;1
 dhcp03a:g08n05a;openvpn;1
 dhcp03a:g08n06a;openvpn;1
+g04n01a:g05n01a;openvpn;1
+g04n01a:g05n02a;openvpn;1
+g04n01b:g05n02b;openvpn;1
+g04n01a:g05n03a;openvpn;1
+g04n01b:g05n03b;openvpn;1
 g05n03a:g04n01a;openvpn;1
 g05n03a:g05n01a;openvpn;1
 g05n03a:g05n02a;openvpn;1
