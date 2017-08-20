@@ -1,0 +1,20 @@
+# Rechnername; ipoffset; Kommentar
+# ipoffset: Das was wir normalerweise in ffsbb als letztes Quadrupel verwendet haben.
+dhcp01;  251;
+dhcp02;  252;
+dhcp03;  253;
+g01n00;   10;
+g01n01;   11;
+g01n03;   13;
+g04n01;   41;
+g05n01;   51;
+g05n02;   52;
+g05n03;   53;
+g08n01;   81;
+g08n02;   82;
+g08n03;   83;
+g08n04;   84;
+g08n05;   85;
+g08n06;   86;
+munin02; 242;
+netinfo; 243;

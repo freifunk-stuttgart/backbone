@@ -35,11 +35,15 @@
     |     |+------- gw05n03
     |     +-------- Leitung 1
     +-------------- dhcp01
-* AS-Nummern: Privater Bereich, 4277777NNN, NNN=4.Quadrupel aus ffsbb
+* AS-Nummern: Privater Bereich, 4277777NNN, NNN=4.Quadrupel aus ffsbb, vgl. doc/ipoffsets
+* doc/ipoffsets
+  Hostname; IP Offset; Kommentar
+  das 4. Quadrupel aus ffsbb
 * doc/lines
   Hostname; Leitungsbezeichner; Interfacename; IP; Beschreibung
 * doc/bgp_lines
   Hostname; Leitungsbezeichner; AS-Nummer; Router-ID
+  koennte automatisch generiert werden aus doc/ipoffsets
 * doc/tunnels
   Leitung1; Leitung2; VPN-Technik; Prioritaet
     VPN-Technik: openvpn, ipsec
