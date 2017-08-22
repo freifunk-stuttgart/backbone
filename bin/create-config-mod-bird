@@ -1,0 +1,135 @@
+#!/bin/bash 
+bgp_path_prepend () {
+  local BGP_AS=$1
+  local priority=$2
+  local i
+  i=$priority
+  while [ $i -gt 1 ]; do
+    echo -n "bgp_path.prepend($BGP_AS); "
+    i=$((i-1))
+  done
+}
+
+bgp_local_pref () {
+  local line=$1
+  local target_line=$2
+  cat ../doc/bgp_local_pref | sort -rt';' -k +4 | awk -F';' '
+    $1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ { print $3 " " $4 }
+    $2 ~ /^[ \t]*'$line'$/ && $1 ~ /^[ \t]*'$target_line'$/ { print $3 " " $4 }
+  ' | while read network metric; do
+    echo -n "if net ~ [ $network ] then { bgp_local_pref=$metric; accept; }"
+  done
+}
+
+bird_create_host () {
+  local host=$1
+  ROUTERID=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$4} END {print a}' ../doc/bgp_lines)
+  BGP_AS=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$3} END {print a}' ../doc/bgp_lines)
+  cat <<-EOF > ../output/etc/bird/bird_host_$host.conf
+	router id $ROUTERID;
+	template bgp t_bgp_local {
+	  local as $BGP_AS;
+	}
+EOF
+  get_lines $host | while read line; do
+    get_target_line $line | while read target_line; do
+      target_as=$(awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ {a=$3} END {gsub(" ","",a); print a}' ../doc/bgp_lines)
+      target_host=$(awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ {a=$1} END {gsub(" ","",a); print a}' ../doc/bgp_lines)
+      tunnel_tech=$(awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ { print $3 } $1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /^[ \t]*'$line'$/ { print $3 }' ../doc/tunnels)
+      offset=$(get_ip_offset $target_host)
+      priority=$(awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ {print $4}; $1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /^[ \t]*'$line'$/ {print $4}' ../doc/tunnels)
+      BGBPATH=$(bgp_path_prepend $BGP_AS $priority)
+      BGPLOCALPREF=$(bgp_local_pref $line $target_line)
+      if [ "x$tunnel_tech" == "xnone" ]; then
+        SOURCEIP=$(awk  -F';' '$1 ~ /^[ \t]*'$line'$/ { print $3 }' ../doc/vpnservers)
+        awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ { print $4 }' ../doc/lines | while read ip; do
+          echo "protocol bgp BGPID from t_bgp { bfd on; neighbor $ip as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; }; source address $SOURCEIP;}"
+        done
+      else
+        awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../doc/vpnservers | while read ip1 ip2 ip3 ip4; do
+          echo "protocol bgp BGPID from t_bgp { bfd on; neighbor $ip1.$ip2.$ip3."$(($ip4+$offset))" as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; };}"
+        done
+      fi
+    done
+  done | while read outline; do
+    id=$(($id+1))
+    echo "$outline" | sed 's/BGPID/bgp'$id'/'
+  done > ../output/etc/bird/bird_location_$host.conf
+  cat /etc/iproute2/rt_tables |sed '/^#/d; /^25[345]/d; /^0/d' | while read rt_id rt_name; do
+    cat <<-EOF
+	table tk_$rt_name;
+	protocol kernel k_$rt_name from t_kernel {
+	        table tk_$rt_name;
+	        kernel table $rt_id;
+	        export filter nodefaultroute;
+	}
+	protocol pipe p_$rt_name from p_kernel {
+	        peer table tk_$rt_name;
+	}
+EOF
+  done >> ../output/etc/bird/bird_location_$host.conf
+  # echo 'protocol direct { interface "*"; }' >> ../output/etc/bird/bird_location_$host.conf
+  echo "update-alternatives --install /etc/bird/bird_this_location.conf bird_this_location.conf /etc/bird/bird_location_${host}.conf 100"
+  echo "update-alternatives --install /etc/bird/bird_this_host.conf bird_this_host.conf /etc/bird/bird_host_${host}.conf 100"
+}
+bird_create_config () {
+  cat <<-EOF > ../output/etc/bird/bird_backbone.conf
+	# log syslog { debug, trace, info, remote, warning, error, auth, fatal, bug };
+	log syslog { warning, error, auth, fatal, bug };
+	timeformat protocol iso long;
+	
+	include "/etc/bird/bird_this_host.conf";
+	debug protocols all;
+	
+	protocol device {
+	  scan time 10;           # Scan interfaces every 10 seconds
+	}
+	
+	filter bgprouting {
+	  krt_metric = 100;       
+	  if net ~ [ 0.0.0.0/0{0,7} ] then reject; # no default routes, not even split ones
+	  reject;
+	}
+
+	filter nodefaultroute {
+	  if net ~ [ 0.0.0.0/0{0,7} ] then reject; # no default routes, not even split ones
+	  accept;
+	}
+	
+	protocol bfd {
+	  interface "*" {
+	    interval 1000 ms;
+	  };
+	}
+
+	protocol kernel {
+	  learn;                  # Learn all alien routes from the kernel
+	  persist;                # Don't remove routes on bird shutdown
+	  scan time 10;           # Scan kernel routing table every 5 seconds
+	  import filter bgprouting;             # Default is import all
+	  # kernel table 99;         # Kernel table to synchronize with (default: main)
+	  export filter bgprouting;
+	  device routes;
+	}
+	
+	template bgp t_bgp from t_bgp_local {
+	  password "rukauz7maegued4Oph1cu3bu5ahk2izienieru9gepohMuTh4zaizooRae8oozoo";
+	  import filter bgprouting;
+	  export filter bgprouting;
+	}
+	
+	template kernel t_kernel {
+	  learn;
+	  persist;
+	  scan time 10;
+	  import filter nodefaultroute;
+	  export filter nodefaultroute;
+	}
+	template pipe p_kernel {
+	  import all;
+	  export all;
+	  mode transparent;
+	}
+	include "/etc/bird/bird_this_location.conf";
+EOF
+}
