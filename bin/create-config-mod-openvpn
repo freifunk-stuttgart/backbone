@@ -1,0 +1,118 @@
+openvpn_create_server() {
+  local line=$1
+  BINDIP=$(get_line_ip $line)
+  BINDIPNAT=$(get_line_ip_nat $line $BINDIP)
+  if [ "x$BINDIPNAT" != "x" ]; then
+    BINDIP=$BINDIPNAT
+  fi
+  cat <<-EOF > ../output/etc/openvpn/server_${line}.conf
+	local $BINDIP
+	port 2000
+	proto udp
+	dev $line
+	dev-type tap
+	ca /etc/openvpn/openvpn-loc/ca/keys/ca.crt
+	cert /etc/openvpn/openvpn-loc/ca/keys/${HOSTNAME}.crt
+	key /etc/openvpn/openvpn-loc/ca/keys/${HOSTNAME}.key
+	dh /etc/openvpn/openvpn-loc/ca/keys/dh4096.pem
+	mode server
+	tls-server
+	keepalive 2 30
+	tls-auth /etc/openvpn/openvpn-loc/ca/keys/ta.key 0
+	user nobody
+	group nogroup
+	persist-key
+	persist-tun
+	status /var/log/openvpn/openvpn-location-$line-status.log
+	crl-verify /etc/openvpn/openvpn-loc/ca/keys/crl.pem
+	client-to-client
+	script-security 3
+EOF
+}
+openvpn_create_client() {
+  local line=$1
+  local target_line=$2
+  SERVERIP=$(get_line_ip $target_line)
+  BINDIP=""
+  BINDIP=$(get_line_ip $line)
+  BINDIPNAT=$(get_line_ip_nat $line $BINDIP)
+  if [ "x$BINDIPNAT" != "x" ]; then
+    BINDIP=$BINDIPNAT
+  fi
+  cat <<-EOF > ../output/etc/openvpn/client_${line}${target_line}.conf
+	remote $SERVERIP 2000
+	proto udp
+	dev $line$target_line
+	dev-type tap
+	ca /etc/openvpn/openvpn-loc/ca/keys/ca.crt
+	cert /etc/openvpn/openvpn-loc/ca/keys/${HOSTNAME}-client.crt
+	key /etc/openvpn/openvpn-loc/ca/keys/${HOSTNAME}-client.key
+	dh /etc/openvpn/openvpn-loc/ca/keys/dh4096.pem
+	client
+	remote-cert-tls server
+	keepalive 2 30
+	tls-auth /etc/openvpn/openvpn-loc/ca/keys/ta.key 1
+	user nobody
+	group nogroup
+	persist-key
+	persist-tun
+	status /var/log/openvpn/openvpn-location-$line$target_line-status.log
+	crl-verify /etc/openvpn/openvpn-loc/ca/keys/crl.pem
+	script-security 3
+EOF
+  if [ "x$BINDIP" != "x" ]; then
+    echo local $BINDIP >> ../output/etc/openvpn/client_${line}${target_line}.conf
+  else
+    echo nobind >> ../output/etc/openvpn/client_${line}${target_line}.conf
+  fi
+}
+
+# OpenVPN Server Interfaces
+openvpn_deploy_server() {
+local HOSTNAME=$1
+get_lines $HOSTNAME | while read line; do
+  awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /openvpn/ {gsub("\\."," ",$3); print $3}' ../doc/vpnservers |
+  while read neta netb netc netd; do
+    offset=$(get_ip_offset $HOSTNAME)
+    cat <<-EOF > ../output/etc/network/interfaces.d/$line
+	# Server OpenVPN
+	allow-hotplug $line
+	iface $line inet static
+	    address $neta.$netb.$netc.$((netd+offset))
+	    network $neta.$netb.$netc.$netd
+	    broadcast $neta.$netb.$netc.$((netd+63))
+	    netmask 255.255.255.192
+	    pre-up systemctl start openvpn@server_\$IFACE || true
+	    post-down systemctl stop openvpn@server_\$IFACE || true
+EOF
+    openvpn_create_server $line
+  done
+done
+}
+
+# OpenVPN Client Interfaces
+openvpn_deploy_client() {
+local HOSTNAME=$1
+get_lines $HOSTNAME | while read line; do
+  awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /openvpn/ { print $2 } $2 ~ /^[ \t]*'$line'$/ && $3 ~ /openvpn/ { print $1 }' ../doc/tunnels |
+  while read target_line; do
+    awk -F';' '$1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /openvpn/ {gsub("\\."," ",$3); print $3}' ../doc/vpnservers |
+    while read neta netb netc netd; do
+      offset=$(get_ip_offset $HOSTNAME)
+      cat <<-EOF > ../output/etc/network/interfaces.d/$line$target_line
+	# Client OpenVPN
+	iface $line$target_line inet static
+	    address $neta.$netb.$netc.$((netd+offset))
+	    network $neta.$netb.$netc.$netd
+	    broadcast $neta.$netb.$netc.$((netd+63))
+	    netmask 255.255.255.192
+	    pre-up /usr/sbin/openvpn --config /etc/openvpn/client_\$IFACE.conf --mktun || true
+	    pre-up systemctl start openvpn@client_\$IFACE || true
+	    post-down systemctl stop openvpn@client_\$IFACE || true
+	    post-down /usr/sbin/openvpn --config /etc/openvpn/client_\$IFACE.conf --rmtun || true
+EOF
+      openvpn_create_client $line $target_line
+    done
+  done
+done
+}
