@@ -1,16 +1,30 @@
 #!/bin/bash
 
 print_help() {
-  echo "Usage: $0 [--help] [-h] [--hostname=HOSTNAME] --psk=PSK" >&2
+  echo "Usage: $0 [--help] [-h] [--hostname=HOSTNAME] [--[no-]openvpn] [--[no-]ipsec] [--[no-]firewall] [--psk=PSK]" >&2
   echo "--hostname: alternate hostname, not $HOSTNAME" >&2
   echo "--psk:      ipsec preshared key" >&2
+  echo "--bird:     create bird config (default)" >&2
+  echo "--openvpn:  create openvpn server/client config" >&2
+  echo "--ipsec:    create ipsec config, needs --psk" >&2
+  echo "--firewall: print firewall config" >&2
 }
 error() {
   print_help
   echo "$*"
   exit 1
 }
-TEMP=`getopt -o h --long help,hostname:,psk: -- "$@"`
+
+# Skript Defaults
+DO_BIRD=1
+DO_OPENVPN=0
+DO_IPSEC=0
+DO_LIHAS_FW=0
+
+# local Defaults
+[ -e /etc/default/backbone ] && . /etc/default/backbone
+
+TEMP=`getopt -o h --long help,hostname:,psk:,no-openvpn,openvpn,no-ipsec,ipsec,no-firewall,firewall,no-bird,bird -- "$@"`
 if [ $? != 0 ] ; then print_help >&2 ; exit 1 ; fi
 
 eval set -- "$TEMP"
@@ -18,6 +32,14 @@ while true ; do
   case "$1" in
     --hostname)    HOSTNAME=$2; shift 2;;
     --psk)         PSK=$2; shift 2;;
+    --no-bird)     DO_BIRD=0; shift 1;;
+    --bird)        DO_BIRD=1; shift 1;;
+    --no-openvpn)  DO_OPENVPN=0; shift 1;;
+    --openvpn)     DO_OPENVPN=1; shift 1;;
+    --no-ipsec)    DO_IPSEC=0; shift 1;;
+    --ipsec)       DO_IPSEC=1; shift 1;;
+    --no-firewall) DO_LIHAS_FW=0; shift 1;;
+    --firewall)    DO_LIHAS_FW=1; shift 1;;
     --help)        print_help; exit 0;;
     -h)            print_help; exit 0;;
     --)            shift ; break ;;
@@ -26,10 +48,10 @@ while true ; do
 done
 
 . ./create-config-mod-misc
-. ./create-config-mod-ipsec
-. ./create-config-mod-openvpn
-. ./create-config-mod-bird
-. ./create-config-mod-fw
+[ x1 == x"$DO_IPSEC" ] && . ./create-config-mod-ipsec
+[ x1 == x"$DO_OPENVPN" ] && . ./create-config-mod-openvpn
+[ x1 == x"$DO_BIRD" ] && . ./create-config-mod-bird
+[ x1 == x"$DO_LIHAS_FW" ] && . ./create-config-mod-fw
 
 # Routingstatements
 get_lines $HOSTNAME | while read line; do
@@ -48,15 +70,15 @@ get_lines $HOSTNAME | while read line; do
   done
 done
 
-mkdir -p ../output/etc/network/interfaces.d
-mkdir -p ../output/etc/openvpn
-openvpn_deploy_server $HOSTNAME
-openvpn_deploy_client $HOSTNAME
+[ x00 != x"$DO_OPENVPN$DO_IPSEC" ] && mkdir -p ../output/etc/network/interfaces.d
+[ x1 == x"$DO_OPENVPN" ] && mkdir -p ../output/etc/openvpn
+[ x1 == x"$DO_OPENVPN" ] && openvpn_deploy_server $HOSTNAME
+[ x1 == x"$DO_OPENVPN" ] && openvpn_deploy_client $HOSTNAME
 
-ipsec_deploy $HOSTNAME "$PSK"
-mkdir -p ../output/etc/bird
-bird_create_config
-bird_create_host $HOSTNAME
+[ x1 == x"$DO_IPSEC" ] && ipsec_deploy $HOSTNAME "$PSK"
+[ x1 == x"$DO_BIRD" ] && mkdir -p ../output/etc/bird
+[ x1 == x"$DO_BIRD" ] && bird_create_config
+[ x1 == x"$DO_BIRD" ] && bird_create_host $HOSTNAME
 
-firewall_config_print
+[ x1 == x"$DO_LIHAS_FW" ] && firewall_config_print
 
