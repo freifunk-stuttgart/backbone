@@ -1,0 +1,18 @@
+#!/bin/bash
+
+firewall_config_print () {
+  IFACES=$(ls ../output/etc/network/interfaces.d/ | xargs echo)
+  echo "In /etc/firewall.lihas.d/localhost:"
+  cat <<-EOF
+	for in in $IFACES; do
+	  for out in $IFACES; do
+	    IPT_FILTER "-A FORWARD -i \$in -o \$out -j ACCEPT"
+	  done
+	done
+EOF
+  for iface in $IFACES; do
+    if [ ! -e /etc/firewall.lihas.d/interface-$iface ]; then
+      echo ln -s /etc/firewall.lihas.d/interface-backbone /etc/firewall.lihas.d/interface-$iface
+    fi
+  done
+}
