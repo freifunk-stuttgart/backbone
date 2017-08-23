@@ -25,6 +25,14 @@ bird_create_host () {
   local host=$1
   ROUTERID=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$4} END {print a}' ../doc/bgp_lines)
   BGP_AS=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$3} END {print a}' ../doc/bgp_lines)
+  if [ x"$ROUTERID" == x ]; then
+    echo "Router ID undefined for $host in ../doc/bgp_lines"
+    exit 2
+  fi
+  if [ x"$BGP_AS" == x ]; then
+    echo "BGP AS undefined for $host in ../doc/bgp_lines"
+    exit 2
+  fi
   cat <<-EOF > ../output/etc/bird/bird_host_$host.conf
 	router id $ROUTERID;
 	template bgp t_bgp_local {
