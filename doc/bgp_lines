@@ -2,21 +2,21 @@
 dhcp01;  dhcp01a; 4277777251;          91.226.89.224; 100MBit/s, alias fuer gw05n01
 dhcp02;  dhcp02a; 4277777252;          5.196.123.233;
 dhcp03;  dhcp03a; 4277777253; 2001:4ba0:fff1:f8::253; IPv6-only
-g01n00;  g01n00a; 4277777010;   2001:4ba0:fff1:f8::9;
-g01n01;  g01n01a; 4277777011;          5.104.108.110;
-g01n01;  g01n01b; 4277777011;  2001:4ba0:fff1:f8::10;
-g01n03;  g01n03a; 4277777013;         89.163.131.200; 100MBit/s DECIX
-g04n01;  g04n01a; 4277777041;         213.239.221.23; 1000MBit/s Hetzner
-g05n01;  g05n01a; 4277777051;          91.226.89.224; 100MBit/s DECIX
-g05n02;  g05n02a; 4277777052;         89.163.224.133; 300MBit/s DECIX
-g05n02;  g05n02b; 4277777052;   2001:4ba0:ffec:83::1; 300MBit/s DECIX
-g05n03;  g05n03a; 4277777053;         93.186.197.153; 300MBit/s DECIX
-g05n03;  g05n03b; 4277777053;  2001:4ba0:ffff:150::1; 300MBit/s DECIX
-g08n01;  g08n01a; 4277777081;             81.7.8.106; 100MBit/s, EUSERV
-g08n02;  g08n02a; 4277777082;                      -; 100MBit/s, AS16276 OVH Strassburg
-g08n03;  g08n03a; 4277777083;                      -; 100MBit/s, OVH Strassburg, bald Scaleway
-g08n04;  g08n04a; 4277777084;                      -; 200MBit/s, Scaleway Paris
-g08n05;  g08n05a; 4277777085;           51.15.62.159; 200MBit/s, Scaleway Amsterdam
-g08n06;  g08n06a; 4277777086;                      -; 100MBit/s, AS16276 OVH Paris
+gw01n00; g01n00a; 4277777010;   2001:4ba0:fff1:f8::9;
+gw01n01; g01n01a; 4277777011;          5.104.108.110;
+gw01n01; g01n01b; 4277777011;  2001:4ba0:fff1:f8::10;
+gw01n03; g01n03a; 4277777013;         89.163.131.200; 100MBit/s DECIX
+gw04n01; g04n01a; 4277777041;         213.239.221.23; 1000MBit/s Hetzner
+gw05n01; g05n01a; 4277777051;          91.226.89.224; 100MBit/s DECIX
+gw05n02; g05n02a; 4277777052;         89.163.224.133; 300MBit/s DECIX
+gw05n02; g05n02b; 4277777052;   2001:4ba0:ffec:83::1; 300MBit/s DECIX
+gw05n03; g05n03a; 4277777053;         93.186.197.153; 300MBit/s DECIX
+gw05n03; g05n03b; 4277777053;  2001:4ba0:ffff:150::1; 300MBit/s DECIX
+gw08n01; g08n01a; 4277777081;             81.7.8.106; 100MBit/s, EUSERV
+gw08n02; g08n02a; 4277777082;                      -; 100MBit/s, AS16276 OVH Strassburg
+gw08n03; g08n03a; 4277777083;                      -; 100MBit/s, OVH Strassburg, bald Scaleway
+gw08n04; g08n04a; 4277777084;                      -; 200MBit/s, Scaleway Paris
+gw08n05; g08n05a; 4277777085;           51.15.62.159; 200MBit/s, Scaleway Amsterdam
+gw08n06; g08n06a; 4277777086;                      -; 100MBit/s, AS16276 OVH Paris
 munin02; muni02a; 4277777242;                      -;
 netinfo; netinfa; 4277777243;                      -;
