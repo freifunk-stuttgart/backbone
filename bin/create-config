@@ -1,0 +1,62 @@
+#!/bin/bash
+
+print_help() {
+  echo "Usage: $0 [--help] [-h] [--hostname=HOSTNAME] --psk=PSK" >&2
+  echo "--hostname: alternate hostname, not $HOSTNAME" >&2
+  echo "--psk:      ipsec preshared key" >&2
+}
+error() {
+  print_help
+  echo "$*"
+  exit 1
+}
+TEMP=`getopt -o h --long help,hostname:,psk: -- "$@"`
+if [ $? != 0 ] ; then print_help >&2 ; exit 1 ; fi
+
+eval set -- "$TEMP"
+while true ; do
+  case "$1" in
+    --hostname)    HOSTNAME=$2; shift 2;;
+    --psk)         PSK=$2; shift 2;;
+    --help)        print_help; exit 0;;
+    -h)            print_help; exit 0;;
+    --)            shift ; break ;;
+    *)             error "Unknown parameter $1, try -h";;
+  esac
+done
+
+. ./create-config-mod-misc
+. ./create-config-mod-ipsec
+. ./create-config-mod-openvpn
+. ./create-config-mod-bird
+. ./create-config-mod-fw
+
+# Routingstatements
+get_lines $HOSTNAME | while read line; do
+  interface=$(get_line_interface $line)
+  target_lines=$(get_target_line $line)
+  for target_line in $target_lines; do
+    target_ip=$(get_line_ip $target_line)
+    if [ "x$target_ip" != "x" ]; then
+      gw=$(get_ip_gateway $interface)
+      if [ x"$gw" != x ]; then
+        echo "# Routing for interface $interface:"
+        printf "\tup ip route add %s via %s || true\n" $target_ip $gw
+      fi
+      # echo $line, $interface, $target_line, $target_ip
+    fi
+  done
+done
+
+mkdir -p ../output/etc/network/interfaces.d
+mkdir -p ../output/etc/openvpn
+openvpn_deploy_server $HOSTNAME
+openvpn_deploy_client $HOSTNAME
+
+ipsec_deploy $HOSTNAME "$PSK"
+mkdir -p ../output/etc/bird
+bird_create_config
+bird_create_host $HOSTNAME
+
+firewall_config_print
+
