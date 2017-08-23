@@ -23,7 +23,7 @@ get_line_interface() {
 }
 get_ip_offset() {
   local HNAME=$1
-  awk -F';' '$1 ~ /^[ \t]*'$HNAME'$/ {print $2}' ../doc/ipoffsets
+  offset=$(awk -F';' '$1 ~ /^[ \t]*'$HNAME'$/ {print $2}' ../doc/ipoffsets)
   if [ $offset -gt 254 ]; then
     error "Offset > 254, new vpn instances needed"
   fi
