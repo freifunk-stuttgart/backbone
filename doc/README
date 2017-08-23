@@ -51,3 +51,6 @@
 * doc/vpnservers
   Leitung; VPN-technik; Netzwerk
     Netzwerk: /24 Netzadresse
+* doc/nat_lines
+  Mapping zu realen IPs bei Gateways hinter NAT
+  Leitung; Offizielle IP; NAT IP
