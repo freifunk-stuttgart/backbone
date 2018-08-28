@@ -9,22 +9,21 @@
   * pro physikalisch moeglichem Leitungsweg eine Point-to-Point-Verbindung zu den zentralen VPN-Servern
     * hier vor allem getrennt fuer v4 und v6
   * IPs
-    * Performance-Test-Netz wird verwendet 198.18.0.0/15
-      * ACHTUNG: Warum nicht Carrier Grade NAT Netz: 100.64.0.0/10? Das koennte mehr VPN-Instanzen abbilden.
+    * IPs aus 100.64.0.0/10 (IANA-Reserved IPv4 Prefix for Shared Address Space, RFC 6598)
     * Aufgeteilt in /24 pro VPN-Server, 3. Quadrupel ist gleich dem letzten Quadrupel in ffsbb
-      * gw04n01 als VPN-Server hat das Netz 198.18.41.0/24
-        * und selbst in dem Netz die 198.18.41.41 fuer VPN ueber IPv4
-        * und selbst in dem Netz die 198.19.41.41 fuer VPN ueber IPv6
+      * gw04n01 als VPN-Server hat das Netz 100.100.41.0/24
+        * und selbst in dem Netz die 100.100.41.41 fuer VPN ueber IPv4
+        * und selbst in dem Netz die 100.101.41.41 fuer VPN ueber IPv6
         * ACHTUNG: Ist das klug? Was passiert wenn wir 2 verschiedene VPN-Techniken nutzen, wir haben jetzt schon
           * OpenVPN (Code fertig)
           * IPSEC (Code fertig, untested)
           * fastd (Viel in FFS im Einsatz)
           * tinc (bislang nur meshing im Einsatz, geht aber auch p2p)
           * IPv4 und IPv6 sollten getrennt behandelbar sein, es gab schon Ausfaelle einer der beiden Techniken, die andere lief aber noch.
-      * gw05n03 als Client an gw04n01: 198.18.41.53
+      * gw05n03 als Client an gw04n01: 100.100.41.53
 * Interfacenamen:
   * OpenVPN-Namen und Bridge-Namen: 
-    * dhcp01a: dhcp1, 1. Leitung
+    * dhcp01a: dhcp1, 1. Leitung a
     * g05n03a: Gateway 5, Instanz 3, Leitung a
   * IPSEC-Namen: Kurzform des Rechners und des Zielrechners, alphabetisch sortiert:
     dhcp01ag04n01a
