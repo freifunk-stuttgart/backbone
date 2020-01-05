@@ -9,7 +9,7 @@ gw01n03; g01n03a;  eth0;                       89.163.131.200; 300MBit/s myLoc/s
 gw01n03; g01n03b;  eth0; 2001:4ba0:fff1:f8:26b:2727:103a:8a4c; 300MBit/s myLoc/servdiscount
 gw04n01; g04n01a;  ens9;                       213.239.221.23; 1000MBit/s Hetzner
 gw04n02; g04n02a; ens18;                             5.1.71.2; IPv4-only 
-gw04n05; g04n05a; ens18;        144.76.119.251; 1000MBit/s Hetzner
+gw04n05; g04n05a; ens18;                                    -; 1000MBit/s Hetzner
 gw05n01; g05n01a;  eth0;                        91.226.89.224; 100MBit/s DECIX
 gw05n02; g05n02a;  eth0;                       89.163.224.133; 300MBit/s DECIX
 gw05n02; g05n02b;  eth0;                 2001:4ba0:ffec:83::1; 300MBit/s DECIX
