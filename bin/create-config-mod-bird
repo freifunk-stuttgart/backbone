@@ -51,12 +51,21 @@ EOF
       if [ "x$tunnel_tech" == "xnone" ]; then
         SOURCEIP=$(awk  -F';' '$1 ~ /^[ \t]*'$line'$/ { print $3 }' ../conf/vpnservers)
         awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ { print $4 }' ../conf/lines | while read ip; do
-          echo "protocol bgp BGPID from t_bgp { bfd on; neighbor $ip as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; }; source address $SOURCEIP;}"
+          echo "protocol bgp $line$target_line from t_bgp { bfd on; neighbor $ip as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; }; source address $SOURCEIP;}"
+        done
+      elif [ "x$tunnel_tech" == "xopenvpn" ]; then
+        awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers | while read ip1 ip2 ip3 ip4; do
+          echo "protocol bgp $line$target_line from t_bgp { bfd on; neighbor $ip1.$ip2.$ip3."$(($ip4+$offset))" as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; };}"
         done
       else
-        awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers | while read ip1 ip2 ip3 ip4; do
-          echo "protocol bgp BGPID from t_bgp { bfd on; neighbor $ip1.$ip2.$ip3."$(($ip4+$offset))" as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; };}"
-        done
+        target=$(get_line_host $target_line)
+        source=$(get_line_host $line)
+        offset=$(get_network_offset $line $target_line)
+        offsetdst=$(get_ip_offset $target)
+        offsetsrc=$(get_ip_offset $source)
+        localtunip=100.100.$offset.$offsetsrc
+        remotetunip=100.100.$offset.$offsetdst
+        echo "protocol bgp $line$target_line from t_bgp { source address $localtunip; bfd on; neighbor $remotetunip as $target_as; import filter { ${BGPLOCALPREF} if rt_import_ibgp() then accept; else reject; }; export filter { $BGBPATH if rt_export_ibgp() then accept; else reject; };}"
       fi
     done
   done | while read outline; do
@@ -81,49 +90,84 @@ EOF
   echo "update-alternatives --install /etc/bird/bird_this_host.conf bird_this_host.conf /etc/bird/bird_host_${host}.conf 100"
 }
 bird_create_config () {
-  cat <<-EOF > ../output/etc/bird/bird_backbone.conf
-	# log syslog { debug, trace, info, remote, warning, error, auth, fatal, bug };
-	log syslog { warning, error, auth, fatal, bug };
-	timeformat protocol iso long;
-	
-	include "/etc/bird/bird_this_host.conf";
-	debug protocols all;
-	
+  grep -q 'include "/etc/bird/bird_this_host.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_host.conf\";" >>/etc/bird/bird.conf'
+  grep -q 'include "/etc/bird/bird_standortvernetzung.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_standortvernetzung.conf\";" >>/etc/bird/bird.conf'
+  cat <<-EOF > ../output/etc/bird/bird_standortvernetzung.conf
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
 	}
 	
-	filter bgprouting {
+	function defaultroute() {
+	  return net ~ [ 0.0.0.0/0 ];
+	}
+	function net_cix() {
+	  # CIX Netze, FFS und andere, nicht exportieren
+	  return net ~ [ 100.100.0.0/12+ ];
+	}
+	function net_ffs() {
+	  return net ~ [ 10.190.0.0/15+ ];
+	}
+	function net_rfc1918() {
+	  return net ~ [ 10.0.0.0/8+, 172.16.0.0/12+, 192.168.0.0/16+ ];
+	}
+	function net_martian() {
+	  return net ~ [ 0.0.0.0/8, 10.0.0.0/8+, 100.64.0.0/10+, 127.0.0.0/8+, 169.254.0.0/16+, 172.16.0.0/12+,
+	    192.0.0.0/24+, 192.0.2.0/24+, 192.168.0.0/16+, 198.18.0.0/15+, 198.51.100.0/24+, 203.0.113.0/24+, 224.0.0.0/3+ ];
+	}
+	function rt_import_ibgp() {
+	  return true;
+	}
+	function rt_export_ibgp() {
+	  if defaultroute() || net_cix() then return false;
+	  if net_rfc1918() then return true;
+	  if net_martian() then return false;
+	  if net_ffs() then return true;
+	  return false;
+	}
+	function rt_import_ebgp() {
+	  if net_martian() then return false;
+	  if bgp_path.len > 64 then return false;
+	  return true;
+	}
+	function rt_export_ebgp() {
+	  if net_martian() || net_cix() then return false;
+	  if ( defined(bgp_path) && bgp_path.len > 32 ) then return false;
+	  if net_ffs() then accept;
+	  return false;
+	}
+	filter nodefaultroute {
+	  if defaultroute() then reject;
+	  else accept;
+	}
+	filter bgprouting_ffs {
 	  krt_metric = 100;       
-	  if net ~ [ 0.0.0.0/0{0,7} ] then reject; # no default routes, not even split ones
+	  if defaultroute() then { print "Default Route"; reject; }
+	  if net_cix() then { print "CIX Route"; reject; }
+	  if net_rfc1918() then { accept; }
+	  if net_martian() then { reject; }
+	  if net_ffs() then { accept; }
 	  reject;
 	}
-
-	filter nodefaultroute {
-	  if net ~ [ 0.0.0.0/0{0,7} ] then reject; # no default routes, not even split ones
-	  accept;
-	}
 	
-	protocol bfd {
-	  interface "*" {
-	    interval 1000 ms;
-	  };
-	}
-
 	protocol kernel {
 	  learn;                  # Learn all alien routes from the kernel
 	  persist;                # Don't remove routes on bird shutdown
 	  scan time 10;           # Scan kernel routing table every 5 seconds
-	  import filter bgprouting;             # Default is import all
+	  import filter nodefaultroute;             # Default is import all
 	  # kernel table 99;         # Kernel table to synchronize with (default: main)
-	  export filter bgprouting;
+	  export filter bgprouting_ffs;
 	  device routes;
+	}
+	protocol direct {
+	  interface "-ffsbb", "*";
+	  import filter bgprouting_ffs;
+	  export filter bgprouting_ffs;
 	}
 	
 	template bgp t_bgp from t_bgp_local {
-	  password "rukauz7maegued4Oph1cu3bu5ahk2izienieru9gepohMuTh4zaizooRae8oozoo";
-	  import filter bgprouting;
-	  export filter bgprouting;
+	  password "reiNgaisah0gee9AiGhoal3eeHooja0eiyejeiphohyaethioKeer8oojedoi1ai";
+	  import filter bgprouting_ffs;
+	  export filter bgprouting_ffs;
 	}
 	
 	template kernel t_kernel {
