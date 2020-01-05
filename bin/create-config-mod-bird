@@ -140,7 +140,7 @@ bird_create_config () {
 	  else accept;
 	}
 	filter bgprouting_ffs {
-	  krt_metric = 100;       
+	  krt_metric = 1000;       
 	  if defaultroute() then { print "Default Route"; reject; }
 	  if net_cix() then { print "CIX Route"; reject; }
 	  if net_ffs() then { accept; }
