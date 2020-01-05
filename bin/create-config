@@ -51,7 +51,9 @@ done
 [ x1 == x"$DO_IPSEC" ] && . ./create-config-mod-ipsec
 [ x1 == x"$DO_OPENVPN" ] && . ./create-config-mod-openvpn
 [ x1 == x"$DO_BIRD" ] && . ./create-config-mod-bird
+[ x1 == x"$DO_BIRD" ] && . ./create-config-mod-bird6
 [ x1 == x"$DO_LIHAS_FW" ] && . ./create-config-mod-fw
+. ./create-config-mod-wireguard
 
 # Routingstatements
 get_lines $HOSTNAME | while read line; do
@@ -74,11 +76,14 @@ done
 [ x1 == x"$DO_OPENVPN" ] && mkdir -p ../output/etc/openvpn
 [ x1 == x"$DO_OPENVPN" ] && openvpn_deploy_server $HOSTNAME
 [ x1 == x"$DO_OPENVPN" ] && openvpn_deploy_client $HOSTNAME
+wireguard_deploy $HOSTNAME
 
 [ x1 == x"$DO_IPSEC" ] && ipsec_deploy $HOSTNAME "$PSK"
 [ x1 == x"$DO_BIRD" ] && mkdir -p ../output/etc/bird
 [ x1 == x"$DO_BIRD" ] && bird_create_config
 [ x1 == x"$DO_BIRD" ] && bird_create_host $HOSTNAME
+[ x1 == x"$DO_BIRD" ] && bird6_create_config
+[ x1 == x"$DO_BIRD" ] && bird6_create_host $HOSTNAME
 
 [ x1 == x"$DO_LIHAS_FW" ] && firewall_config_print
 
