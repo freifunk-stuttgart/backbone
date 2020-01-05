@@ -13,7 +13,7 @@ basenet4=$(($offset*64))
 if [ $thisline == $sourceline ]; then
   ifacename=$sourceline$targetline
   remoteip=$(get_line_ip $targetline)
-  localtunip=100.1000.$basenet3.$(($basenet4+$offsetsrc))
+  localtunip=100.100.$basenet3.$(($basenet4+$offsetsrc))
   remotetunip=100.100.$basenet3.$(($basenet4+$offsetdst))
   publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$target'" {print $2}' ../conf/wireguard-pubkeys)
   if [ "x$publickey" == "x" ]; then
