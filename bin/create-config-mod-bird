@@ -102,7 +102,7 @@ bird_create_config () {
 	}
 	function net_cix() {
 	  # CIX Netze, FFS und andere, nicht exportieren
-	  return net ~ [ 100.100.0.0/12+ ];
+	  return net ~ [ 100.100.0.0/16+ ];
 	}
 	function net_ffs() {
 	  return net ~ [ 10.190.0.0/15+ ];
@@ -119,7 +119,6 @@ bird_create_config () {
 	}
 	function rt_export_ibgp() {
 	  if defaultroute() || net_cix() then return false;
-	  if net_rfc1918() then return true;
 	  if net_martian() then return false;
 	  if net_ffs() then return true;
 	  return false;
@@ -143,9 +142,8 @@ bird_create_config () {
 	  krt_metric = 100;       
 	  if defaultroute() then { print "Default Route"; reject; }
 	  if net_cix() then { print "CIX Route"; reject; }
-	  if net_rfc1918() then { accept; }
-	  if net_martian() then { reject; }
 	  if net_ffs() then { accept; }
+	  if net_martian() then { reject; }
 	  reject;
 	}
 	
