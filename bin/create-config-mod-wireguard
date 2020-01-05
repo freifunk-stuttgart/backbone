@@ -24,6 +24,7 @@ if [ $thisline == $sourceline ]; then
 else
   ifacename=$targetline$sourceline
   remoteip=$(get_line_ip $sourceline)
+  if [ "x$remoteip" == "x-" ]; then remoteip=""; fi
   localip=$(get_line_ip $targetline)
   localif=$(get_line_interface $targetline)
   localtunip=100.100.$offset.$offsetdst
