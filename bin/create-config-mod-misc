@@ -41,7 +41,7 @@ get_ip_offset() {
   local HNAME=$1
   offset=$(awk -F';' '$1 ~ /^[ \t]*'$HNAME'$/ {print $2}' ../conf/ipoffsets)
   if [ "x$offset" == "x" ] || [ $offset -gt 254 ]; then
-    error "Offset > 254, new vpn instances needed"
+    error "Offset for $HNAME > 254, new vpn instances needed"
   fi
   echo $offset
 }
