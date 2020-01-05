@@ -5,31 +5,30 @@ sourceline=$2
 targetline=$3
 source=$(get_line_host $sourceline)
 target=$(get_line_host $targetline)
-basenet3=$(get_network_offset $sourceline $targetline)
+offset=$(get_network_offset $sourceline $targetline)
 offsetsrc=$(get_ip_offset $source)
 offsetdst=$(get_ip_offset $target)
-basenet4=$offset)
 if [ $thisline == $sourceline ]; then
   ifacename=$sourceline$targetline
   remoteip=$(get_line_ip $targetline)
   localip=$(get_line_ip $sourceline)
   localif=$(get_line_interface $sourceline)
-  localtunip=100.100.$basenet3.$(($basenet4+$offsetsrc))
+  localtunip=100.100.$offset.$offsetsrc
   localtun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
-  remotetunip=100.100.$basenet3.$(($basenet4+$offsetdst))
+  remotetunip=100.100.$offset.$offsetdst
   remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
-  publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$target'" {print $2}' ../doc/wireguard-pubkeys)
+  publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$target'" {print $2}' ../conf/wireguard-pubkeys)
   if [ "x$publickey" == "x" ]; then
-    error "Pubkey missing in ../doc/wireguard-pubkeys for $target $targetline"
+    error "Pubkey missing in ../conf/wireguard-pubkeys for $target $targetline"
   fi
 else
   ifacename=$targetline$sourceline
   remoteip=$(get_line_ip $sourceline)
   localip=$(get_line_ip $targetline)
   localif=$(get_line_interface $targetline)
-  localtunip=100.100.$basenet3.$(($basenet4+$offsetdst))
+  localtunip=100.100.$offset.$offsetdst
   localtun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
-  remotetunip=100.100.$basenet3.$(($basenet4+$offsetsrc))
+  remotetunip=100.100.$offset.$offsetsrc
   remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
   publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$source'" {print $2}' ../conf/wireguard-pubkeys)
   if [ "x$publickey" == "x" ]; then
