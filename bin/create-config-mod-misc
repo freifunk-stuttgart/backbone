@@ -6,7 +6,7 @@ get_lines() {
 }
 get_target_line() {
     local line=$1
-    awk -F';' '$1 ~ /^[ \t]*'$line'$/ {print $2} $2 ~ /^[ \t]*'$line'$/ {gsub(" ","",$1); print $1}' ../conf/tunnels
+    cat ../conf/tunnels | sed '/^#/d' | awk -F';' '$1 ~ /^[ \t]*'$line'$/ {print $2} $2 ~ /^[ \t]*'$line'$/ {gsub(" ","",$1); print $1}'
 }
 get_line_ip() {
     local line=$1
@@ -28,14 +28,14 @@ get_line_interface() {
 get_network_offset() {
     sourceline=$1
     targetline=$2
-    awk -F';' -v src=$sourceline -v dst=$targetline '
+    cat ../conf/tunnels | sed '/^#/d' | awk -F';' -v src=$sourceline -v dst=$targetline '
         BEGIN {offset=0; osrc=src; odst=dst; gsub("[a-z][0-9]$","",src); gsub("[a-z][0-9]$","",dst)} 
         $1 == osrc && $2 == odst {outoffset=offset}
         $1 == odst && $2 == osrc {outoffset=offset}
         {tsrc=$1; tdst=$2; gsub("[a-z][0-9]$","",tsrc); gsub("[a-z][0-9]$","",tdst)}
         tsrc == src && tdst == dst {offset+=1}
         tsrc == dst && tdst == src {offset+=1}
-        END {print outoffset}' ../conf/tunnels
+        END {print outoffset}'
 }
 get_ip_offset() {
   local HNAME=$1
