@@ -2,24 +2,20 @@
 # Leitungsname: Interfacename fuer Openvpn-Server, Teil des Interfacenamens fuer OpenVPN-Clients
 # Interfacename: 'physikalisches' Interface auf dem die IP konfiguriert ist
 # fixe IP: extern erreichbare IP, wird nur fuer VPN-server benoetigt
-dhcp01;  dhcp01a; eth0;          91.226.89.224; 100MBit/s, alias fuer gw05n01
-dhcp02;  dhcp02a; eth0;          5.196.123.233;
-dhcp03;  dhcp03a; eth0; 2001:4ba0:fff1:f8::253; IPv6-only
-gw01n00; g01n00a; eth0;   2001:4ba0:fff1:f8::9;
-gw01n01; g01n01a; eth0;          5.104.108.110;
-gw01n01; g01n01b; eth0;  2001:4ba0:fff1:f8::10;
-gw01n03; g01n03a; eth0;         89.163.131.200; 100MBit/s DECIX
-gw04n01; g04n01a; eth0;         213.239.221.23; 1000MBit/s Hetzner
-gw05n01; g05n01a; eth0;          91.226.89.224; 100MBit/s DECIX
-gw05n02; g05n02a; eth0;         89.163.224.133; 300MBit/s DECIX
-gw05n02; g05n02b; eth0;   2001:4ba0:ffec:83::1; 300MBit/s DECIX
-gw05n03; g05n03a; eth0;         93.186.197.153; 300MBit/s DECIX
-gw05n03; g05n03b; eth0;  2001:4ba0:ffff:150::1; 300MBit/s DECIX
-gw08n01; g08n01a; eth0;             81.7.8.106; 100MBit/s, EUSERV
-gw08n02; g08n02a; eth0;                      -; 100MBit/s, AS16276 OVH Strassburg
-gw08n03; g08n03a; eth0;                      -; 100MBit/s, OVH Strassburg, bald Scaleway
-gw08n04; g08n04a; eth0;                      -; 200MBit/s, Scaleway Paris
-gw08n05; g08n05a; eth0;           51.15.62.159; 200MBit/s, Scaleway Amsterdam
-gw08n06; g08n06a; eth0;                      -; 100MBit/s, AS16276 OVH Paris
-munin02; muni02a; eth0;                      -;
-netinfo; netinfa; eth0;                      -;
+dhcp01;  dhcp01a;  eth0;                        89.238.90.125; 100MBit/s
+dhcp02;  dhcp02a;  eth0;                      148.251.129.111;
+dhcp03;  dhcp03a;  eth0;               2001:4ba0:fff1:f8::253; IPv6-only
+gw01n03; g01n03a;  eth0;                       89.163.131.200; 300MBit/s myLoc/servdiscount
+gw01n03; g01n03b;  eth0; 2001:4ba0:fff1:f8:26b:2727:103a:8a4c; 300MBit/s myLoc/servdiscount
+gw04n01; g04n01a;  ens9;                       213.239.221.23; 1000MBit/s Hetzner
+gw04n02; g04n02a; ens18;                             5.1.71.2; IPv4-only 
+gw05n01; g05n01a;  eth0;                        91.226.89.224; 100MBit/s DECIX
+gw05n02; g05n02a;  eth0;                       89.163.224.133; 300MBit/s DECIX
+gw05n02; g05n02b;  eth0;                 2001:4ba0:ffec:83::1; 300MBit/s DECIX
+gw05n03; g05n03a;  eth0;                       93.186.197.153; 300MBit/s DECIX
+gw05n03; g05n03b;  eth0;                2001:4ba0:ffff:150::1; 300MBit/s DECIX
+gw07n01; g07n01a;  eth0;                         62.210.69.97; IPv4-only
+gw08n02; g08n02a;  eth0;                      148.251.129.188; 100MBit/s, AS16276 OVH Strassburg
+munin02; muni02a;  eth0;                                    -;
+netinfo; netinfa;  ens2;                       89.163.142.247; 
+netinfo; netinfb;  ens2;        2001:4ba0:fff1:f8:68:b3:29:da;
