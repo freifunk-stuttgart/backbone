@@ -37,7 +37,8 @@ else
 fi
 # Offset für mehrere Verbindungen pro GW-Paar
 # port: nbbb, n=12+offset, bbb=offset Standort b
-port=$(printf "%i%03i" $((12+$offset)) $offsetdst)
+portsrc=$(printf "%i%03i" $((12+$offset)) $offsetdst)
+portdst=$(printf "%i%03i" $((12+$offset)) $offsetsrc)
 privatekey=$(cat /etc/wireguard/wg-private.key)
 if [ "x$privatekey" == "x" ]; then
   error "please create /etc/wireguard/wg-private.key:
@@ -48,7 +49,7 @@ mkdir -p ../output/etc/wireguard
 	[Interface]
 	Table = off
 	SaveConfig = false
-	ListenPort = $port
+	ListenPort = $portsrc
 	PrivateKey = $privatekey
 	PostUp = ip address add local $localtunip/32 remote $remotetunip/32 dev $ifacename
 	PostUp = ip -6 address add local $localtun6ip/128 remote $remotetun6ip/128 dev $ifacename
@@ -58,7 +59,7 @@ mkdir -p ../output/etc/wireguard
 	AllowedIPs = 0.0.0.0/0
 EOF
 if [ x != x"$remoteip" ]; then
-  echo "Endpoint = $remoteip:$port" >> ../output/etc/wireguard/$ifacename.conf
+  echo "Endpoint = $remoteip:$portdst" >> ../output/etc/wireguard/$ifacename.conf
 fi
 # Add $remotetunip route to /etc/network/interfaces.d/$sourceline$targetline
 mkdir -p ../output/etc/network/interfaces.d
