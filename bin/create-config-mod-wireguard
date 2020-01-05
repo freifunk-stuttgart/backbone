@@ -1,0 +1,79 @@
+#!/bin/bash
+wireguard_deploy_config() {
+thisline=$1
+sourceline=$2
+targetline=$3
+basenet3=0
+source=$(get_line_host $sourceline)
+target=$(get_line_host $targetline)
+offset=$(get_network_offset $sourceline $targetline)
+offsetsrc=$(get_ip_offset $source)
+offsetdst=$(get_ip_offset $target)
+basenet4=$(($offset*64))
+if [ $thisline == $sourceline ]; then
+  ifacename=$sourceline$targetline
+  remoteip=$(get_line_ip $targetline)
+  localtunip=100.1000.$basenet3.$(($basenet4+$offsetsrc))
+  remotetunip=100.100.$basenet3.$(($basenet4+$offsetdst))
+  publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$target'" {print $2}' ../conf/wireguard-pubkeys)
+  if [ "x$publickey" == "x" ]; then
+    error "Pubkey missing in ../conf/wireguard-pubkeys for $target $targetline"
+  fi
+else
+  ifacename=$targetline$sourceline
+  remoteip=$(get_line_ip $sourceline)
+  localtunip=100.100.$basenet3.$(($basenet4+$offsetdst))
+  remotetunip=100.100.$basenet3.$(($basenet4+$offsetsrc))
+  publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$source'" {print $2}' ../conf/wireguard-pubkeys)
+  if [ "x$publickey" == "x" ]; then
+    error "Pubkey missing in ../conf/wireguard-pubkeys for $source $sourceline"
+  fi
+fi
+# Offset für mehrere Verbindungen pro GW-Paar? o2-o2, um-um, um-o2, o2-um
+# port: naabb, n=1+offset, aa=offset Standort a, bb=offset Standort b
+port=$(printf "%i%02i%02i" $((1+$offset)) $offsetsrc $offsetdst)
+privatekey=$(cat /etc/wireguard/wg-private.key)
+if [ "x$privatekey" == "x" ]; then
+  error "please create /etc/wireguard/wg-private.key:
+    wg genkey | tee /etc/wireguard/wg-private.key | wg pubkey > /etc/wireguard/wg-public.key"
+fi
+mkdir -p ../output/etc/wireguard
+  cat <<-EOF >../output/etc/wireguard/$ifacename.conf
+	[Interface]
+	Table = off
+	SaveConfig = false
+	ListenPort = $port
+	PrivateKey = $privatekey
+	PostUp = ip address add local $localtunip/32 remote $remotetunip/32 dev $ifacename
+	
+	[Peer]
+	PublicKey = $publickey
+	AllowedIPs = 0.0.0.0/0
+EOF
+if [ x != x"$remoteip" ]; then
+  echo "Endpoint = $remoteip:$port" >> ../output/etc/wireguard/$ifacename.conf
+fi
+# Add $remotetunip route to /etc/network/interfaces.d/$sourceline$targetline
+      cat <<-EOF > ../output/etc/network/interfaces.d/$ifacename
+	# Client OpenVPN
+	iface $ifacename inet manual
+	    pre-up wg-quick up $ifacename || true
+	    pre-down wg-quick down $ifacename || true
+EOF
+}
+
+wireguard_deploy() {
+  local HOST=$1
+  get_lines $HOST | while read line; do
+    awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $2 }' ../conf/tunnels |
+    while read target_line; do
+      wireguard_deploy_config $line $line $target_line
+    done
+  done
+  get_lines $HOST | while read line; do
+    awk -F';' '$2 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $1 }' ../conf/tunnels |
+    while read target_line; do
+      wireguard_deploy_config $line $target_line $line
+    done
+  done
+}
