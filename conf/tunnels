@@ -40,6 +40,7 @@ g04n01a;g05n02a;wireguard;1
 g04n01b;g05n02b;wireguard;1
 g04n01a;g05n03a;wireguard;1
 g04n01b;g05n03b;wireguard;1
+g04n05a;g05n03a;wireguard;1
 g05n03a;g04n01a;wireguard;1
 g05n03a;g05n01a;wireguard;1
 g05n03a;g05n02a;wireguard;1
