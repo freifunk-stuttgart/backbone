@@ -115,12 +115,13 @@ bird_create_config () {
 	    192.0.0.0/24+, 192.0.2.0/24+, 192.168.0.0/16+, 198.18.0.0/15+, 198.51.100.0/24+, 203.0.113.0/24+, 224.0.0.0/3+ ];
 	}
 	function rt_import_ibgp() {
-	  return true;
+	  if defaultroute() || net_cix() then return false;
+	  if net_rfc1918() then return true;
+	  return false;
 	}
 	function rt_export_ibgp() {
 	  if defaultroute() || net_cix() then return false;
-	  if net_martian() then return false;
-	  if net_ffs() then return true;
+	  if net_rfc1918() then return true;
 	  return false;
 	}
 	function rt_import_ebgp() {
