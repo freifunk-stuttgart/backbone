@@ -11,6 +11,7 @@ offsetdst=$(get_ip_offset $target)
 if [ $thisline == $sourceline ]; then
   ifacename=$sourceline$targetline
   remoteip=$(get_line_ip $targetline)
+  if [ "x$remoteip" == "x-" ]; then remoteip=""; fi
   localip=$(get_line_ip $sourceline)
   localif=$(get_line_interface $sourceline)
   localtunip=100.100.$offset.$offsetsrc
