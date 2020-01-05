@@ -8,18 +8,22 @@
 * Tunnel, immer Punkt zu Punkt
   * pro physikalisch moeglichem Leitungsweg eine Point-to-Point-Verbindung zu den zentralen VPN-Servern
     * hier vor allem getrennt fuer v4 und v6
+    * IPv4 und IPv6 sollten getrennt behandelbar sein, es gab schon Ausfaelle einer der beiden Techniken, die andere lief aber noch.
   * IPs
     * IPs aus 100.64.0.0/10 (IANA-Reserved IPv4 Prefix for Shared Address Space, RFC 6598)
     * Aufgeteilt in /24 pro VPN-Server, 3. Quadrupel ist gleich dem letzten Quadrupel in ffsbb
       * gw04n01 als VPN-Server hat das Netz 100.100.41.0/24
         * und selbst in dem Netz die 100.100.41.41 fuer VPN ueber IPv4
         * und selbst in dem Netz die 100.101.41.41 fuer VPN ueber IPv6
-        * ACHTUNG: Ist das klug? Was passiert wenn wir 2 verschiedene VPN-Techniken nutzen, wir haben jetzt schon
+        * jede VPN-Technik bekommt eigenes Netz z.B. fastd ueber v4 100.102.0.0
+        * Moegliche VPN-Technik
+          * Wireguard
+            * v4: `100.100.N.M`, Konvention `N` < `M`
+            * v6: `100.101.N.M` 
           * OpenVPN (Code fertig)
           * IPSEC (Code fertig, untested)
           * fastd (Viel in FFS im Einsatz)
           * tinc (bislang nur meshing im Einsatz, geht aber auch p2p)
-          * IPv4 und IPv6 sollten getrennt behandelbar sein, es gab schon Ausfaelle einer der beiden Techniken, die andere lief aber noch.
       * gw05n03 als Client an gw04n01: 100.100.41.53
 * Interfacenamen:
   * OpenVPN-Namen und Bridge-Namen: 
@@ -27,10 +31,10 @@
     * g05n03a: Gateway 5, Instanz 3, Leitung a
   * IPSEC-Namen: Kurzform des Rechners und des Zielrechners, alphabetisch sortiert:
     dhcp01ag04n01a
-    ^
-    |     ^
-    |     |^
-    |     ||     ^- Leitung 1
+    ^     ^^     ^
+    |     ||     |
+    |     ||     |
+    |     ||     +- Leitung 1
     |     |+------- gw05n03
     |     +-------- Leitung 1
     +-------------- dhcp01
