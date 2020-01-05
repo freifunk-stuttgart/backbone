@@ -1,6 +1,6 @@
 # Rechnername; Leitungsname; Interfacename; fixe IP; Kommentar
 # Leitungsname: Interfacename fuer Openvpn-Server, Teil des Interfacenamens fuer OpenVPN-Clients
-# Interfacename: 'physikalisches' Interface des
+# Interfacename: 'physikalisches' Interface auf dem die IP konfiguriert ist
 # fixe IP: extern erreichbare IP, wird nur fuer VPN-server benoetigt
 dhcp01;  dhcp01a; eth0;          91.226.89.224; 100MBit/s, alias fuer gw05n01
 dhcp02;  dhcp02a; eth0;          5.196.123.233;
