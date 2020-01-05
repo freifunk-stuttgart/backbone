@@ -144,6 +144,7 @@ bird_create_config () {
 	  if defaultroute() then { print "Default Route"; reject; }
 	  if net_cix() then { print "CIX Route"; reject; }
 	  if net_ffs() then { accept; }
+	  if net_rfc1918() then { accept; }
 	  if net_martian() then { reject; }
 	  reject;
 	}
