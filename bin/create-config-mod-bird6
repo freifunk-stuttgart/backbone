@@ -1,27 +1,5 @@
 #!/bin/bash 
-bgp_path_prepend () {
-  local BGP_AS=$1
-  local priority=$2
-  local i
-  i=$priority
-  while [ $i -gt 1 ]; do
-    echo -n "bgp_path.prepend($BGP_AS); "
-    i=$((i-1))
-  done
-}
-
-bgp_local_pref () {
-  local line=$1
-  local target_line=$2
-  cat ../conf/bgp_local_pref | sort -rt';' -k +4 | awk -F';' '
-    $1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ { print $3 " " $4 }
-    $2 ~ /^[ \t]*'$line'$/ && $1 ~ /^[ \t]*'$target_line'$/ { print $3 " " $4 }
-  ' | while read network metric; do
-    echo -n "if net ~ [ $network ] then { bgp_local_pref=$metric; accept; }"
-  done
-}
-
-bird_create_host () {
+bird6_create_host () {
   local host=$1
   ROUTERID=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$4} END {print a}' ../conf/bgp_lines)
   BGP_AS=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$3} END {print a}' ../conf/bgp_lines)
@@ -33,7 +11,7 @@ bird_create_host () {
     echo "BGP AS undefined for $host in ../conf/bgp_lines"
     exit 2
   fi
-  cat <<-EOF > ../output/etc/bird/bird_host_$host.conf
+  cat <<-EOF > ../output/etc/bird/bird6_host_$host.conf
 	router id $ROUTERID;
 	template bgp t_bgp_local {
 	  local as $BGP_AS;
@@ -49,29 +27,30 @@ EOF
       BGBPATH=$(bgp_path_prepend $BGP_AS $priority)
       BGPLOCALPREF=$(bgp_local_pref $line $target_line)
       if [ "x$tunnel_tech" == "xnone" ]; then
-        SOURCEIP=$(awk  -F';' '$1 ~ /^[ \t]*'$line'$/ { print $3 }' ../conf/vpnservers)
-        awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ { print $4 }' ../conf/lines | while read ip; do
-          echo "protocol bgp $line$target_line from t_bgp { bfd on; neighbor $ip as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; }; source address $SOURCEIP;}"
-        done
+        echo $tunnel_tech: No IPv6 Support >&2
+        #SOURCEIP=$(awk  -F';' '$1 ~ /^[ \t]*'$line'$/ { print $3 }' ../conf/vpnservers)
+        #awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ { print $4 }' ../conf/lines | while read ip; do
+        #  echo "protocol bgp $line$target_line from t_bgp { bfd on; next hop self; neighbor $ip as $target_as; import filter { ${BGPLOCALPREF} if rt_import_ibgp() then accept; else reject; }; export filter { $BGBPATH if rt_export_ibgp() then accept; else reject; }; source address $SOURCEIP;}"
+        #done
       elif [ "x$tunnel_tech" == "xopenvpn" ]; then
-        awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers | while read ip1 ip2 ip3 ip4; do
-          echo "protocol bgp $line$target_line from t_bgp { bfd on; neighbor $ip1.$ip2.$ip3."$(($ip4+$offset))" as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; };}"
-        done
+        echo $tunnel_tech: No IPv6 Support >&2
+        # No IPv6 Support
+        #awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers | while read ip1 ip2 ip3 ip4; do
+        #  echo "protocol bgp $line$target_line from t_bgp { bfd on; next hop self; neighbor $ip1.$ip2.$ip3."$(($ip4+$offset))" as $target_as; import filter { ${BGPLOCALPREF} if rt_import_ibgp() then accept; else reject; }; export filter { $BGBPATH if rt_export_ibgp() then accept; else reject; };}"
+        #done
       else
         target=$(get_line_host $target_line)
         source=$(get_line_host $line)
         offset=$(get_network_offset $line $target_line)
         offsetdst=$(get_ip_offset $target)
         offsetsrc=$(get_ip_offset $source)
-        localtunip=100.100.$offset.$offsetsrc
-        remotetunip=100.100.$offset.$offsetdst
+        basenet4=$(($offset*16))
+	localtunip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
+	remotetunip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
         echo "protocol bgp $line$target_line from t_bgp { source address $localtunip; bfd on; neighbor $remotetunip as $target_as; import filter { ${BGPLOCALPREF} if rt_import_ibgp() then accept; else reject; }; export filter { $BGBPATH if rt_export_ibgp() then accept; else reject; };}"
       fi
     done
-  done | while read outline; do
-    id=$(($id+1))
-    echo "$outline" | sed 's/BGPID/bgp'$id'/'
-  done > ../output/etc/bird/bird_location_$host.conf
+  done > ../output/etc/bird/bird6_location_$host.conf
   cat /etc/iproute2/rt_tables |sed '/^#/d; /^25[345]/d; /^0/d' | while read rt_id rt_name; do
     cat <<-EOF
 	table tk_$rt_name;
@@ -84,48 +63,50 @@ EOF
 	        peer table tk_$rt_name;
 	}
 EOF
-  done >> ../output/etc/bird/bird_location_$host.conf
-  # echo 'protocol direct { interface "*"; }' >> ../output/etc/bird/bird_location_$host.conf
-  echo "update-alternatives --install /etc/bird/bird_this_location.conf bird_this_location.conf /etc/bird/bird_location_${host}.conf 100"
-  echo "update-alternatives --install /etc/bird/bird_this_host.conf bird_this_host.conf /etc/bird/bird_host_${host}.conf 100"
+  done >> ../output/etc/bird/bird6_location_$host.conf
+  echo "update-alternatives --install /etc/bird/bird6_this_location.conf bird6_this_location.conf /etc/bird/bird6_location_${host}.conf 100"
+  echo "update-alternatives --install /etc/bird/bird6_this_host.conf bird6_this_host.conf /etc/bird/bird6_host_${host}.conf 100"
 }
-bird_create_config () {
-  grep -q 'include "/etc/bird/bird_this_host.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_host.conf\";" >>/etc/bird/bird.conf'
-  grep -q 'include "/etc/bird/bird_standortvernetzung.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_standortvernetzung.conf\";" >>/etc/bird/bird.conf'
-  cat <<-EOF > ../output/etc/bird/bird_standortvernetzung.conf
+bird6_create_config () {
+  grep -q 'include "/etc/bird/bird6_this_host.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird6_this_host.conf\";" >>/etc/bird/bird6.conf'
+  grep -q 'include "/etc/bird/bird6_standortvernetzung.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird6_standortvernetzung.conf\";" >>/etc/bird/bird6.conf'
+  cat <<-EOF > ../output/etc/bird/bird6_standortvernetzung.conf
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
 	}
 	
 	function defaultroute() {
-	  return net ~ [ 0.0.0.0/0 ];
+	  return net ~ [ ::/0 ];
 	}
 	function net_cix() {
 	  # CIX Netze, FFS und andere, nicht exportieren
-	  return net ~ [ 100.100.0.0/12+ ];
+	  return net ~ [ fd21:711:ffff:ffff::/64 ];
+	  return false;
 	}
 	function net_ffs() {
-	  return net ~ [ 10.190.0.0/15+ ];
-	}
-	function net_rfc1918() {
-	  return net ~ [ 10.0.0.0/8+, 172.16.0.0/12+, 192.168.0.0/16+ ];
+	  # wahrscheinlich nicht releavnt, weil wir nur <=/48 routen
+	  return net ~ [ fd21:b4dc:4b00::/40+ ];
+	  return false;
 	}
 	function net_martian() {
-	  return net ~ [ 0.0.0.0/8, 10.0.0.0/8+, 100.64.0.0/10+, 127.0.0.0/8+, 169.254.0.0/16+, 172.16.0.0/12+,
-	    192.0.0.0/24+, 192.0.2.0/24+, 192.168.0.0/16+, 198.18.0.0/15+, 198.51.100.0/24+, 203.0.113.0/24+, 224.0.0.0/3+ ];
+	  if net ~ [ 3ffe::/16+, 2001:db8::/32+ ] then return true;
+	  if net ~ [ 2001::/32 ] then return false;
+	  if net ~ [ 2001::/32+ ] then return true;
+	  if net ~ [ 2002::/16 ] then return false;
+	  if net ~ [ 2002::/16+, 0000::/8+, fe00::/9+, fe00::/8+ ] then return true;
+	  if net ~ [ 2000::/3{3,48}, 0::/0{0,56} ] then return false;
 	}
 	function rt_import_ibgp() {
 	  return true;
 	}
 	function rt_export_ibgp() {
 	  if defaultroute() || net_cix() then return false;
-	  if net_rfc1918() then return true;
 	  if net_martian() then return false;
 	  if net_ffs() then return true;
 	  return false;
 	}
 	function rt_import_ebgp() {
-	  if net_martian() then return false;
+	  if net_martian() || net_ffs() then return false;
 	  if bgp_path.len > 64 then return false;
 	  return true;
 	}
@@ -139,11 +120,10 @@ bird_create_config () {
 	  if defaultroute() then reject;
 	  else accept;
 	}
-	filter bgprouting_ffs {
+	filter bgprouting_lihas {
 	  krt_metric = 100;       
 	  if defaultroute() then { print "Default Route"; reject; }
 	  if net_cix() then { print "CIX Route"; reject; }
-	  if net_rfc1918() then { accept; }
 	  if net_martian() then { reject; }
 	  if net_ffs() then { accept; }
 	  reject;
@@ -182,6 +162,6 @@ bird_create_config () {
 	  export all;
 	  mode transparent;
 	}
-	include "/etc/bird/bird_this_location.conf";
+	include "/etc/bird/bird6_this_location.conf";
 EOF
 }
