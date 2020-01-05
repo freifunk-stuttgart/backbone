@@ -37,7 +37,7 @@ else
 fi
 # Offset für mehrere Verbindungen pro GW-Paar
 # port: nbbb, n=12+offset, bbb=offset Standort b
-port=$(printf "%i%02i%02i" $((1+$offset)) $offsetsrc $offsetdst)
+port=$(printf "%i%03i" $((12+$offset)) $offsetdst)
 privatekey=$(cat /etc/wireguard/wg-private.key)
 if [ "x$privatekey" == "x" ]; then
   error "please create /etc/wireguard/wg-private.key:
