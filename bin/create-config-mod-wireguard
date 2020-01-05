@@ -17,6 +17,8 @@ if [ $thisline == $sourceline ]; then
   localtun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
   remotetunip=100.100.$offset.$offsetdst
   remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
+  portsrc=$(printf "%i%03i" $((12+$offset)) $offsetdst)
+  portdst=$(printf "%i%03i" $((12+$offset)) $offsetsrc)
   publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$target'" {print $2}' ../conf/wireguard-pubkeys)
   if [ "x$publickey" == "x" ]; then
     error "Pubkey missing in ../conf/wireguard-pubkeys for $target $targetline"
@@ -32,14 +34,14 @@ else
   remotetunip=100.100.$offset.$offsetsrc
   remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
   publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$source'" {print $2}' ../conf/wireguard-pubkeys)
+  portsrc=$(printf "%i%03i" $((12+$offset)) $offsetsrc)
+  portdst=$(printf "%i%03i" $((12+$offset)) $offsetdst)
   if [ "x$publickey" == "x" ]; then
     error "Pubkey missing in ../conf/wireguard-pubkeys for $source $sourceline"
   fi
 fi
 # Offset für mehrere Verbindungen pro GW-Paar
 # port: nbbb, n=12+offset, bbb=offset Standort b
-portsrc=$(printf "%i%03i" $((12+$offset)) $offsetdst)
-portdst=$(printf "%i%03i" $((12+$offset)) $offsetsrc)
 privatekey=$(cat /etc/wireguard/wg-private.key)
 if [ "x$privatekey" == "x" ]; then
   error "please create /etc/wireguard/wg-private.key:
