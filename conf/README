@@ -11,20 +11,18 @@
     * IPv4 und IPv6 sollten getrennt behandelbar sein, es gab schon Ausfaelle einer der beiden Techniken, die andere lief aber noch.
   * IPs
     * IPs aus 100.64.0.0/10 (IANA-Reserved IPv4 Prefix for Shared Address Space, RFC 6598)
-    * Aufgeteilt in /24 pro VPN-Server, 3. Quadrupel ist gleich dem letzten Quadrupel in ffsbb
-      * gw04n01 als VPN-Server hat das Netz 100.100.41.0/24
-        * und selbst in dem Netz die 100.100.41.41 fuer VPN ueber IPv4
-        * und selbst in dem Netz die 100.101.41.41 fuer VPN ueber IPv6
-        * jede VPN-Technik bekommt eigenes Netz z.B. fastd ueber v4 100.102.0.0
+    * Aufgeteilt in /24 pro VPN-Server oder Technik, 4. Quadrupel ist gleich dem letzten Quadrupel in ffsbb
+      * Wireguard IPv4 hat das Netz 100.100.0.0/24
+      * Wireguard IPv6 hat das Netz 100.100.1.0/24
+        * gw04n01 selbst in dem Netz die 100.100.0.41 fuer Wireguard ueber IPv4
+        * gw04n01 selbst in dem Netz die 100.101.1.41 fuer Wireguard ueber IPv6
+        * jede VPN-Technik bekommt eigenes Netz z.B. fastd ueber v4 100.100.2.0
         * Moegliche VPN-Technik
           * Wireguard
-            * v4: `100.100.N.M`, Konvention `N` < `M`
-            * v6: `100.101.N.M` 
           * OpenVPN (Code fertig)
           * IPSEC (Code fertig, untested)
           * fastd (Viel in FFS im Einsatz)
           * tinc (bislang nur meshing im Einsatz, geht aber auch p2p)
-      * gw05n03 als Client an gw04n01: 100.100.41.53
 * Interfacenamen:
   * OpenVPN-Namen und Bridge-Namen: 
     * dhcp01a: dhcp1, 1. Leitung a
