@@ -61,6 +61,7 @@ if [ x != x"$remoteip" ]; then
   echo "Endpoint = $remoteip:$port" >> ../output/etc/wireguard/$ifacename.conf
 fi
 # Add $remotetunip route to /etc/network/interfaces.d/$sourceline$targetline
+mkdir -p ../output/etc/network/interfaces.d
       cat <<-EOF > ../output/etc/network/interfaces.d/$ifacename
 	# Client OpenVPN
 	iface $ifacename inet manual
