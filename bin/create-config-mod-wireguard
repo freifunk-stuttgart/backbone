@@ -74,13 +74,13 @@ EOF
 wireguard_deploy() {
   local HOST=$1
   get_lines $HOST | while read line; do
-    awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $2 }' ../conf/tunnels |
+    cat ../conf/tunnels | sed '/^#/d' | awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $2 }' |
     while read target_line; do
       wireguard_deploy_config $line $line $target_line
     done
   done
   get_lines $HOST | while read line; do
-    awk -F';' '$2 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $1 }' ../conf/tunnels |
+    cat ../conf/tunnels | sed '/^#/d' | awk -F';' '$2 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $1 }' |
     while read target_line; do
       wireguard_deploy_config $line $target_line $line
     done
