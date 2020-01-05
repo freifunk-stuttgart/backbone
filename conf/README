@@ -15,7 +15,7 @@
       * Wireguard IPv4 hat das Netz 100.100.0.0/24
       * Wireguard IPv6 hat das Netz 100.100.1.0/24
         * gw04n01 selbst in dem Netz die 100.100.0.41 fuer Wireguard ueber IPv4
-        * gw04n01 selbst in dem Netz die 100.101.1.41 fuer Wireguard ueber IPv6
+        * gw04n01 selbst in dem Netz die 100.100.1.41 fuer Wireguard ueber IPv6
         * jede VPN-Technik bekommt eigenes Netz z.B. fastd ueber v4 100.100.2.0
         * Moegliche VPN-Technik
           * Wireguard
