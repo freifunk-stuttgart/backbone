@@ -38,22 +38,22 @@
     |     |+------- gw05n03
     |     +-------- Leitung 1
     +-------------- dhcp01
-* AS-Nummern: Privater Bereich, 4277777NNN, NNN=4.Quadrupel aus ffsbb, vgl. doc/ipoffsets
-* doc/ipoffsets
+* AS-Nummern: Privater Bereich, 4277777NNN, NNN=4.Quadrupel aus ffsbb, vgl. conf/ipoffsets
+* conf/ipoffsets
   Hostname; IP Offset; Kommentar
   das 4. Quadrupel aus ffsbb
-* doc/lines
+* conf/lines
   Hostname; Leitungsbezeichner; Interfacename; IP; Beschreibung
-* doc/bgp_lines
+* conf/bgp_lines
   Hostname; Leitungsbezeichner; AS-Nummer; Router-ID
-  koennte automatisch generiert werden aus doc/ipoffsets
-* doc/tunnels
+  koennte automatisch generiert werden aus conf/ipoffsets
+* conf/tunnels
   Leitung1; Leitung2; VPN-Technik; Prioritaet
     VPN-Technik: openvpn, ipsec
     Prioritaet: BGP-Prioritaet, n-1 mal die eigene AS voranstellen
-* doc/vpnservers
+* conf/vpnservers
   Leitung; VPN-technik; Netzwerk
     Netzwerk: /24 Netzadresse
-* doc/nat_lines
+* conf/nat_lines
   Mapping zu realen IPs bei Gateways hinter NAT
   Leitung; Offizielle IP; NAT IP

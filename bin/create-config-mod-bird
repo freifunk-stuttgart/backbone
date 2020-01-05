@@ -13,7 +13,7 @@ bgp_path_prepend () {
 bgp_local_pref () {
   local line=$1
   local target_line=$2
-  cat ../doc/bgp_local_pref | sort -rt';' -k +4 | awk -F';' '
+  cat ../conf/bgp_local_pref | sort -rt';' -k +4 | awk -F';' '
     $1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ { print $3 " " $4 }
     $2 ~ /^[ \t]*'$line'$/ && $1 ~ /^[ \t]*'$target_line'$/ { print $3 " " $4 }
   ' | while read network metric; do
@@ -23,14 +23,14 @@ bgp_local_pref () {
 
 bird_create_host () {
   local host=$1
-  ROUTERID=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$4} END {print a}' ../doc/bgp_lines)
-  BGP_AS=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$3} END {print a}' ../doc/bgp_lines)
+  ROUTERID=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$4} END {print a}' ../conf/bgp_lines)
+  BGP_AS=$(awk -F';' '$1 ~ /^[ \t]*'$host'$/ {a=$3} END {print a}' ../conf/bgp_lines)
   if [ x"$ROUTERID" == x ]; then
-    echo "Router ID undefined for $host in ../doc/bgp_lines"
+    echo "Router ID undefined for $host in ../conf/bgp_lines"
     exit 2
   fi
   if [ x"$BGP_AS" == x ]; then
-    echo "BGP AS undefined for $host in ../doc/bgp_lines"
+    echo "BGP AS undefined for $host in ../conf/bgp_lines"
     exit 2
   fi
   cat <<-EOF > ../output/etc/bird/bird_host_$host.conf
@@ -41,20 +41,20 @@ bird_create_host () {
 EOF
   get_lines $host | while read line; do
     get_target_line $line | while read target_line; do
-      target_as=$(awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ {a=$3} END {gsub(" ","",a); print a}' ../doc/bgp_lines)
-      target_host=$(awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ {a=$1} END {gsub(" ","",a); print a}' ../doc/bgp_lines)
-      tunnel_tech=$(awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ { print $3 } $1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /^[ \t]*'$line'$/ { print $3 }' ../doc/tunnels)
+      target_as=$(awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ {a=$3} END {gsub(" ","",a); print a}' ../conf/bgp_lines)
+      target_host=$(awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ {a=$1} END {gsub(" ","",a); print a}' ../conf/bgp_lines)
+      tunnel_tech=$(awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ { print $3 } $1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /^[ \t]*'$line'$/ { print $3 }' ../conf/tunnels)
       offset=$(get_ip_offset $target_host)
-      priority=$(awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ {print $4}; $1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /^[ \t]*'$line'$/ {print $4}' ../doc/tunnels)
+      priority=$(awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$target_line'$/ {print $4}; $1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /^[ \t]*'$line'$/ {print $4}' ../conf/tunnels)
       BGBPATH=$(bgp_path_prepend $BGP_AS $priority)
       BGPLOCALPREF=$(bgp_local_pref $line $target_line)
       if [ "x$tunnel_tech" == "xnone" ]; then
-        SOURCEIP=$(awk  -F';' '$1 ~ /^[ \t]*'$line'$/ { print $3 }' ../doc/vpnservers)
-        awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ { print $4 }' ../doc/lines | while read ip; do
+        SOURCEIP=$(awk  -F';' '$1 ~ /^[ \t]*'$line'$/ { print $3 }' ../conf/vpnservers)
+        awk -F';' '$2 ~ /^[ \t]*'$target_line'$/ { print $4 }' ../conf/lines | while read ip; do
           echo "protocol bgp BGPID from t_bgp { bfd on; neighbor $ip as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; }; source address $SOURCEIP;}"
         done
       else
-        awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../doc/vpnservers | while read ip1 ip2 ip3 ip4; do
+        awk -F';' '$1 ~ /^[ \t]*'$line'$/ || $1 ~ /^[ \t]*'$target_line'$/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers | while read ip1 ip2 ip3 ip4; do
           echo "protocol bgp BGPID from t_bgp { bfd on; neighbor $ip1.$ip2.$ip3."$(($ip4+$offset))" as $target_as; import filter { ${BGPLOCALPREF} accept; }; export filter { $BGBPATH accept; };}"
         done
       fi

@@ -71,7 +71,7 @@ EOF
 openvpn_deploy_server() {
 local HOSTNAME=$1
 get_lines $HOSTNAME | while read line; do
-  awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /openvpn/ {gsub("\\."," ",$3); print $3}' ../doc/vpnservers |
+  awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /openvpn/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers |
   while read neta netb netc netd; do
     offset=$(get_ip_offset $HOSTNAME)
     cat <<-EOF > ../output/etc/network/interfaces.d/$line
@@ -94,9 +94,9 @@ done
 openvpn_deploy_client() {
 local HOSTNAME=$1
 get_lines $HOSTNAME | while read line; do
-  awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /openvpn/ { print $2 } $2 ~ /^[ \t]*'$line'$/ && $3 ~ /openvpn/ { print $1 }' ../doc/tunnels |
+  awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /openvpn/ { print $2 } $2 ~ /^[ \t]*'$line'$/ && $3 ~ /openvpn/ { print $1 }' ../conf/tunnels |
   while read target_line; do
-    awk -F';' '$1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /openvpn/ {gsub("\\."," ",$3); print $3}' ../doc/vpnservers |
+    awk -F';' '$1 ~ /^[ \t]*'$target_line'$/ && $2 ~ /openvpn/ {gsub("\\."," ",$3); print $3}' ../conf/vpnservers |
     while read neta netb netc netd; do
       offset=$(get_ip_offset $HOSTNAME)
       cat <<-EOF > ../output/etc/network/interfaces.d/$line$target_line

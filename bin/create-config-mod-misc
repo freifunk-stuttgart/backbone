@@ -2,28 +2,28 @@
 
 get_lines() {
     host=$1
-    awk -F';' '$1 ~ /^[ \t]*'$host'$/ {gsub(" ","",$2); print $2}' ../doc/lines
+    awk -F';' '$1 ~ /^[ \t]*'$host'$/ {gsub(" ","",$2); print $2}' ../conf/lines
 }
 get_target_line() {
     local line=$1
-    awk -F';' '$1 ~ /^[ \t]*'$line'$/ {print $2} $2 ~ /^[ \t]*'$line'$/ {gsub(" ","",$1); print $1}' ../doc/tunnels
+    awk -F';' '$1 ~ /^[ \t]*'$line'$/ {print $2} $2 ~ /^[ \t]*'$line'$/ {gsub(" ","",$1); print $1}' ../conf/tunnels
 }
 get_line_ip() {
     local line=$1
-    awk -F';' '$2 ~ /^[ \t]*'$line'$/ && $4 !~ /dyn/ {gsub(" ","",$4); print $4}' ../doc/lines
+    awk -F';' '$2 ~ /^[ \t]*'$line'$/ && $4 !~ /dyn/ {gsub(" ","",$4); print $4}' ../conf/lines
 }
 get_line_ip_nat() {
     local line=$1
     local ip=$2
-    awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$ip'$/ {gsub(" ","",$3); print $3}' ../doc/nat_lines
+    awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $2 ~ /^[ \t]*'$ip'$/ {gsub(" ","",$3); print $3}' ../conf/nat_lines
 }
 get_line_interface() {
     local line=$1
-    awk -F';' '$2 ~ /^[ \t]*'$line'$/ {print $3}' ../doc/lines
+    awk -F';' '$2 ~ /^[ \t]*'$line'$/ {print $3}' ../conf/lines
 }
 get_ip_offset() {
   local HNAME=$1
-  offset=$(awk -F';' '$1 ~ /^[ \t]*'$HNAME'$/ {print $2}' ../doc/ipoffsets)
+  offset=$(awk -F';' '$1 ~ /^[ \t]*'$HNAME'$/ {print $2}' ../conf/ipoffsets)
   if [ $offset -gt 254 ]; then
     error "Offset > 254, new vpn instances needed"
   fi
