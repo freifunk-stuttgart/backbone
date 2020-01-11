@@ -97,7 +97,7 @@ bird_create_config () {
   grep -q 'include "/etc/bird/bird_this_location.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_location.conf\";" >>/etc/bird/bird.conf'
   cat <<-EOF > ../output/etc/bird/bird_general.conf
 	filter nodefaultroute {
-	  if defaultroute() then reject;
+	  if net ~ [ 0.0.0.0/0 ] then reject;
 	  else accept;
 	}
 	protocol device {
