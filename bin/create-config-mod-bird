@@ -138,8 +138,9 @@ bird_create_config () {
 	  return net ~ [ 0.0.0.0/0 ];
 	}
 	function net_cix() {
-	  # CIX Netze, FFS und andere, nicht exportieren
-	  return net ~ [ 100.100.0.0/16+ ];
+	  # CIX Netze, nicht exportieren, ausser es ist unser eigenes CIX-Netz 100.100.0.0/16+
+	  # return net ~ [ 100.100.0.0/16+ ];
+	  return false;
 	}
 	function net_ffs() {
 	  return net ~ [ 10.190.0.0/15+ ];

@@ -66,8 +66,8 @@ bird6_create_config () {
 	  return net ~ [ ::/0 ];
 	}
 	function net_cix() {
-	  # CIX Netze, FFS und andere, nicht exportieren
-	  return net ~ [ fd21:711:ffff:ffff::/64 ];
+	  # CIX Netze, nicht exportieren, ausser es ist unser eigenes CIX-Netz fd21:711:ffff:ffff::/64
+	  # return net ~ [ fd21:711:ffff:ffff::/64 ];
 	  return false;
 	}
 	function net_ffs() {
