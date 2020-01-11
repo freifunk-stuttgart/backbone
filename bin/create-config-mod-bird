@@ -114,8 +114,8 @@ bird_create_config () {
 	}
 	protocol direct {
 	  interface "br*", "icvpn", "ffsl3";
-	  import filter bgprouting_ffs;
-	  export filter bgprouting_ffs;
+	  import all;
+	  export all;
 	}
 	template kernel t_kernel {
 	  learn;
