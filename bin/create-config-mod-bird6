@@ -80,6 +80,7 @@ bird6_create_config () {
 	  if net ~ [ 2001::/32+ ] then return true;
 	  if net ~ [ 2002::/16 ] then return false;
 	  if net ~ [ 2002::/16+, 0000::/8+, fe00::/9+, fe00::/8+ ] then return true;
+          if net ~ [ 2a10::/12+ ] then return false;
 	  if net ~ [ 2000::/3{3,48}, 0::/0{0,56} ] then return false;
 	}
 	function rt_import_ibgp() {
