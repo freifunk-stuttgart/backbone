@@ -84,19 +84,51 @@ EOF
 	        peer table tk_$rt_name;
 	}
 EOF
-  done >> ../output/etc/bird/bird_location_$host.conf
+  done >> ../output/etc/bird/bird_kernel.conf
   # echo 'protocol direct { interface "*"; }' >> ../output/etc/bird/bird_location_$host.conf
   echo "update-alternatives --install /etc/bird/bird_this_location.conf bird_this_location.conf /etc/bird/bird_location_${host}.conf 100"
   echo "update-alternatives --install /etc/bird/bird_this_host.conf bird_this_host.conf /etc/bird/bird_host_${host}.conf 100"
 }
 bird_create_config () {
   grep -q 'include "/etc/bird/bird_this_host.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_host.conf\";" >>/etc/bird/bird.conf'
+  grep -q 'include "/etc/bird/bird_general.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_general.conf\";" >>/etc/bird/bird.conf'
+  grep -q 'include "/etc/bird/bird_kernel.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_kernel.conf\";" >>/etc/bird/bird.conf'
   grep -q 'include "/etc/bird/bird_standortvernetzung.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_standortvernetzung.conf\";" >>/etc/bird/bird.conf'
-  cat <<-EOF > ../output/etc/bird/bird_standortvernetzung.conf
+  grep -q 'include "/etc/bird/bird_this_location.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_location.conf\";" >>/etc/bird/bird.conf'
+  cat <<-EOF > ../output/etc/bird/bird_general.conf
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
 	}
-	
+	protocol kernel {
+	  learn;                  # Learn all alien routes from the kernel
+	  persist;                # Don't remove routes on bird shutdown
+	  scan time 10;           # Scan kernel routing table every 5 seconds
+	  import filter nodefaultroute;             # Default is import all
+	  # kernel table 99;         # Kernel table to synchronize with (default: main)
+	  export filter bgprouting_ffs;
+	  device routes;
+	}
+	protocol direct {
+	  interface "br*", "icvpn", "ffsl3";
+	  import filter bgprouting_ffs;
+	  export filter bgprouting_ffs;
+	}
+	EOF
+  cat <<-EOF > ../output/etc/bird/bird_general.conf
+	template kernel t_kernel {
+	  learn;
+	  persist;
+	  scan time 10;
+	  import filter nodefaultroute;
+	  export filter nodefaultroute;
+	}
+	template pipe p_kernel {
+	  import all;
+	  export all;
+	  mode transparent;
+	}
+	EOF
+  cat <<-EOF > ../output/etc/bird/bird_standortvernetzung.conf
 	function defaultroute() {
 	  return net ~ [ 0.0.0.0/0 ];
 	}
@@ -148,40 +180,10 @@ bird_create_config () {
 	  if net_martian() then { reject; }
 	  reject;
 	}
-	
-	protocol kernel {
-	  learn;                  # Learn all alien routes from the kernel
-	  persist;                # Don't remove routes on bird shutdown
-	  scan time 10;           # Scan kernel routing table every 5 seconds
-	  import filter nodefaultroute;             # Default is import all
-	  # kernel table 99;         # Kernel table to synchronize with (default: main)
-	  export filter bgprouting_ffs;
-	  device routes;
-	}
-	protocol direct {
-	  interface "br*", "icvpn", "ffsl3";
-	  import filter bgprouting_ffs;
-	  export filter bgprouting_ffs;
-	}
-	
 	template bgp t_bgp from t_bgp_local {
 	  password "reiNgaisah0gee9AiGhoal3eeHooja0eiyejeiphohyaethioKeer8oojedoi1ai";
 	  import filter bgprouting_ffs;
 	  export filter bgprouting_ffs;
 	}
-	
-	template kernel t_kernel {
-	  learn;
-	  persist;
-	  scan time 10;
-	  import filter nodefaultroute;
-	  export filter nodefaultroute;
-	}
-	template pipe p_kernel {
-	  import all;
-	  export all;
-	  mode transparent;
-	}
-	include "/etc/bird/bird_this_location.conf";
 EOF
 }
