@@ -120,17 +120,5 @@ bird6_create_config () {
 	  import filter bgprouting_ffs;
 	  export filter bgprouting_ffs;
 	}
-	template kernel t_kernel {
-	  learn;
-	  persist;
-	  scan time 10;
-	  import filter nodefaultroute;
-	  export filter nodefaultroute;
-	}
-	template pipe p_kernel {
-	  import all;
-	  export all;
-	  mode transparent;
-	}
 EOF
 }
