@@ -84,7 +84,7 @@ EOF
 	        peer table tk_$rt_name;
 	}
 EOF
-  done >> ../output/etc/bird/bird_kernel.conf
+  done > ../output/etc/bird/bird_kernel.conf
   # echo 'protocol direct { interface "*"; }' >> ../output/etc/bird/bird_location_$host.conf
   echo "update-alternatives --install /etc/bird/bird_this_location.conf bird_this_location.conf /etc/bird/bird_location_${host}.conf 100"
   echo "update-alternatives --install /etc/bird/bird_this_host.conf bird_this_host.conf /etc/bird/bird_host_${host}.conf 100"
