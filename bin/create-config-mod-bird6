@@ -56,9 +56,9 @@ EOF
 }
 bird6_create_config () {
   grep -q 'include "/etc/bird/bird6_this_host.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird6_this_host.conf\";" >>/etc/bird/bird6.conf'
+  grep -q 'include "/etc/bird/bird6_standortvernetzung.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird6_standortvernetzung.conf\";" >>/etc/bird/bird6.conf'
   grep -q 'include "/etc/bird/bird_general.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird_general.conf\";" >>/etc/bird/bird6.conf'
   grep -q 'include "/etc/bird/bird_kernel.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird_kernel.conf\";" >>/etc/bird/bird6.conf'
-  grep -q 'include "/etc/bird/bird6_standortvernetzung.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird6_standortvernetzung.conf\";" >>/etc/bird/bird6.conf'
   grep -q 'include "/etc/bird/bird6_this_location.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird6_this_location.conf\";" >>/etc/bird/bird6.conf'
   grep -q 'include "/etc/bird/bird_kernel_main.conf";' /etc/bird/bird6.conf || echo 'echo "include \"/etc/bird/bird_kernel_main.conf\";" >>/etc/bird/bird6.conf'
   cat <<-EOF > ../output/etc/bird/bird6_standortvernetzung.conf

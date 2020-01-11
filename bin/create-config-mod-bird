@@ -97,10 +97,6 @@ bird_create_config () {
   grep -q 'include "/etc/bird/bird_this_location.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_location.conf\";" >>/etc/bird/bird.conf'
   grep -q 'include "/etc/bird/bird_kernel_main.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_kernel_main.conf\";" >>/etc/bird/bird.conf'
   cat <<-EOF > ../output/etc/bird/bird_general.conf
-	filter nodefaultroute {
-	  if net ~ [ 0.0.0.0/0 ] then reject;
-	  else accept;
-	}
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
 	}
@@ -134,6 +130,10 @@ bird_create_config () {
 	}
 	EOF
   cat <<-EOF > ../output/etc/bird/bird_standortvernetzung.conf
+	filter nodefaultroute {
+	  if net ~ [ 0.0.0.0/0 ] then reject;
+	  else accept;
+	}
 	function defaultroute() {
 	  return net ~ [ 0.0.0.0/0 ];
 	}
