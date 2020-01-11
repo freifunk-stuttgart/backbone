@@ -3,9 +3,15 @@
 firewall_config_print () {
   IFACES=$(ls ../output/etc/network/interfaces.d/ | xargs echo)
   echo "In /etc/firewall.lihas.d/localhost:"
-  cat <<-EOF
-	for in in $IFACES; do
-	  for out in $IFACES; do
+  mkdir -p ../output/etc/firewall.lihas.d/groups
+  echo ffsl3 > ../output/etc/firewall.lihas.d/groups/ifacegroup-backbone
+  for i in $IFACES; do
+    echo $i >> ../output/etc/firewall.lihas.d/groups/ifacegroup-backbone
+  done
+  ip l l | awk '$1 ~ /^[0-9]+:/ && $2 ~ /^br/ {gsub(":","",$2); print $2}' > ../output/etc/firewall.lihas.d/groups/ifacegroup-segments
+  cat > ../output/etc/firewall.lihas.d/localhost-ffs-bird <<-EOF
+	for in in \$(cat /etc/firewall.lihas.d/groups/ifacegroup-backbone) \$(cat /etc/firewall.lihas.d/groups/ifacegroup-segments); do
+	  for out in \$(cat /etc/firewall.lihas.d/groups/ifacegroup-backbone \$(cat /etc/firewall.lihas.d/groups/ifacegroup-segments)); do
 	    IPT_FILTER "-A FORWARD -i \$in -o \$out -j ACCEPT"
 	  done
 	done
