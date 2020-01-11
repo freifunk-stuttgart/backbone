@@ -95,6 +95,7 @@ bird_create_config () {
   grep -q 'include "/etc/bird/bird_general.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_general.conf\";" >>/etc/bird/bird.conf'
   grep -q 'include "/etc/bird/bird_kernel.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_kernel.conf\";" >>/etc/bird/bird.conf'
   grep -q 'include "/etc/bird/bird_this_location.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_location.conf\";" >>/etc/bird/bird.conf'
+  grep -q 'include "/etc/bird/bird_kernel_main.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_kernel_main.conf\";" >>/etc/bird/bird.conf'
   cat <<-EOF > ../output/etc/bird/bird_general.conf
 	filter nodefaultroute {
 	  if net ~ [ 0.0.0.0/0 ] then reject;
@@ -102,15 +103,6 @@ bird_create_config () {
 	}
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
-	}
-	protocol kernel {
-	  learn;                  # Learn all alien routes from the kernel
-	  persist;                # Don't remove routes on bird shutdown
-	  scan time 10;           # Scan kernel routing table every 5 seconds
-	  import filter nodefaultroute;             # Default is import all
-	  # kernel table 99;         # Kernel table to synchronize with (default: main)
-	  export filter bgprouting_ffs;
-	  device routes;
 	}
 	protocol direct {
 	  interface "br*", "icvpn", "ffsl3";
@@ -128,6 +120,17 @@ bird_create_config () {
 	  import all;
 	  export all;
 	  mode transparent;
+	}
+	EOF
+  cat <<-EOF > ../output/etc/bird/bird_kernel_main.conf
+	protocol kernel {
+	  learn;                  # Learn all alien routes from the kernel
+	  persist;                # Don't remove routes on bird shutdown
+	  scan time 10;           # Scan kernel routing table every 5 seconds
+	  import filter nodefaultroute;             # Default is import all
+	  # kernel table 99;         # Kernel table to synchronize with (default: main)
+	  export filter bgprouting_ffs;
+	  device routes;
 	}
 	EOF
   cat <<-EOF > ../output/etc/bird/bird_standortvernetzung.conf
