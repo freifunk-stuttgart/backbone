@@ -96,6 +96,10 @@ bird_create_config () {
   grep -q 'include "/etc/bird/bird_kernel.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_kernel.conf\";" >>/etc/bird/bird.conf'
   grep -q 'include "/etc/bird/bird_this_location.conf";' /etc/bird/bird.conf || echo 'echo "include \"/etc/bird/bird_this_location.conf\";" >>/etc/bird/bird.conf'
   cat <<-EOF > ../output/etc/bird/bird_general.conf
+	filter nodefaultroute {
+	  if defaultroute() then reject;
+	  else accept;
+	}
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
 	}
@@ -113,8 +117,6 @@ bird_create_config () {
 	  import filter bgprouting_ffs;
 	  export filter bgprouting_ffs;
 	}
-	EOF
-  cat <<-EOF > ../output/etc/bird/bird_general.conf
 	template kernel t_kernel {
 	  learn;
 	  persist;
@@ -166,10 +168,6 @@ bird_create_config () {
 	  if ( defined(bgp_path) && bgp_path.len > 32 ) then return false;
 	  if net_ffs() then accept;
 	  return false;
-	}
-	filter nodefaultroute {
-	  if defaultroute() then reject;
-	  else accept;
 	}
 	filter bgprouting_ffs {
 	  krt_metric = 1000;       
