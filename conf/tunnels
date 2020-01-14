@@ -11,6 +11,7 @@ dhcp01a;g05n03a;wireguard;1
 #dhcp01a;g08n04a;wireguard;1
 #dhcp01a;g08n05a;wireguard;1
 #dhcp01a;g08n06a;wireguard;1
+dhcp01a;netinfa;wireguard;1
 #dhcp02a;g01n03a;wireguard;1
 #dhcp02a;g04n01a;wireguard;1
 #dhcp02a;g04n02a;wireguard;1
@@ -43,6 +44,12 @@ g04n01a;g04n02a;wireguard;1
 g04n01a;g04n05a;wireguard;1
 g04n01a;g05n03a;wireguard;1
 g04n01b;g05n03b;wireguard;1
+g04n01a;netinfa;wireguard;1
+g04n01b;netinfb;wireguard;1
 g04n02a;g04n05a;wireguard;1
 g04n02a;g05n03a;wireguard;1
+g04n02a;netinfa;wireguard;1
 g04n05a;g05n03a;wireguard;1
+g04n05a;netinfa;wireguard;1
+g05n03a;netinfa;wireguard;1
+g05n03b;netinfb;wireguard;1
