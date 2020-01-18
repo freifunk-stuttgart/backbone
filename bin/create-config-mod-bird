@@ -126,7 +126,7 @@ bird_create_config () {
 	  learn;                  # Learn all alien routes from the kernel
 	  persist;                # Don't remove routes on bird shutdown
 	  scan time 10;           # Scan kernel routing table every 5 seconds
-	  import filter bgprouting_ffs;
+	  import filter nodefaultroute;
 	  # kernel table 99;         # Kernel table to synchronize with (default: main)
 	  export filter bgprouting_ffs;
 	  device routes;
