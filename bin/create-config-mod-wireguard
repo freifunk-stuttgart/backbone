@@ -60,7 +60,7 @@ mkdir -p ../output/etc/wireguard
 	
 	[Peer]
 	PublicKey = $publickey
-	AllowedIPs = 0.0.0.0/0
+	AllowedIPs = 0.0.0.0/0, ::/0
 EOF
 if [ x != x"$remoteip" ]; then
   echo "Endpoint = $remoteip:$portdst" >> ../output/etc/wireguard/$ifacename.conf
