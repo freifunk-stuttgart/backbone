@@ -8,6 +8,7 @@ bgp_path_prepend () {
     echo -n "bgp_path.prepend($BGP_AS); "
     i=$((i-1))
   done
+  echo -n "if proto = \"tincffsl3\" then { bgp_path.prepend($BGP_AS); bgp_path.prepend($BGP_AS); } "
 }
 
 bgp_local_pref () {
@@ -105,6 +106,11 @@ bird_create_config () {
 	}
 	protocol direct directffs {
 	  interface "br??";
+	  import all;
+	  export none;
+	}
+	protocol direct tincffsl3 {
+	  interface "ffsl3";
 	  import all;
 	  export none;
 	}
