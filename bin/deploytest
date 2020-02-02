@@ -42,6 +42,6 @@ if [ "x$RESTARTBIRD6" == "x1" ]; then
   echo birdc6 configure
 fi
 if [ "x$RESTARTBIRD" == "x1" ]; then
-  echo bircd configure check
-  echo bircd configure
+  echo birdc configure check
+  echo birdc configure
 fi
