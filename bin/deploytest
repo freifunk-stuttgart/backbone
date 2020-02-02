@@ -1,0 +1,25 @@
+#!/bin/bash
+
+for file in $(rsync --dry-run -rvc ../output/etc / | grep etc); do
+  if [ ! -e "../output/$file" ]; then
+    echo ../output/$file existiert nicht
+    exit 1
+  fi
+  if [ ! -e "/$file" ]; then
+    echo /$file existiert nicht, kopiert
+    cp ../output/$file /$file
+    exit 0
+  fi
+  diff -u "/$file" "../output/$file" | less
+  if ! diff -u "/$file" "../output/$file" >/dev/null 2>&1; then
+  echo Ok to overwrite /$file?
+  read a
+  case $a in
+          [yYjJ])
+                  set -x
+                  cp ../output/$file /$file
+                  set +x
+                  ;;
+  esac
+  fi
+done
