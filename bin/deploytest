@@ -35,7 +35,7 @@ for file in $(rsync --dry-run -rvc ../output/etc / | grep etc); do
   fi
 done
 for iface in $WGRESTART; do
-  echo ifdown $iface; ifup $iface
+  echo "ifdown $iface; ifup $iface"
 done
 if [ "x$RESTARTBIRD6" == "x1" ]; then
   echo birc6 configure check
