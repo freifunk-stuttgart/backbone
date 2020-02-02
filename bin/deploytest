@@ -38,10 +38,10 @@ for iface in $WGRESTART; do
   echo "ifdown $iface; ifup $iface"
 done
 if [ "x$RESTARTBIRD6" == "x1" ]; then
-  echo birc6 configure check
-  echo birc6 configure
+  echo birdc6 configure check
+  echo birdc6 configure
 fi
 if [ "x$RESTARTBIRD" == "x1" ]; then
-  echo birc configure check
-  echo birc configure
+  echo bircd configure check
+  echo bircd configure
 fi
