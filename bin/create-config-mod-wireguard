@@ -60,7 +60,7 @@ mkdir -p ../output/etc/wireguard
 	
 	[Peer]
 	PublicKey = $publickey
-	AllowedIPs = 0.0.0.0/0
+	AllowedIPs = 0.0.0.0/0, ::0/0
 EOF
 if [ x != x"$remoteip" ]; then
   echo "Endpoint = $remoteip:$portdst" >> ../output/etc/wireguard/$ifacename.conf
@@ -68,6 +68,12 @@ fi
 # Add $remotetunip route to /etc/network/interfaces.d/$sourceline$targetline
 mkdir -p ../output/etc/network/interfaces.d
       cat <<-EOF > ../output/etc/network/interfaces.d/$ifacename
+	# Client OpenVPN
+	iface $ifacename inet manual
+	    pre-up wg-quick up $ifacename || true
+	    pre-down wg-quick down $ifacename || true
+EOF
+      cat <<-EOF >> ../output/etc/network/interfaces.d/standortvernetzung
 	# Client OpenVPN
 	iface $ifacename inet manual
 	    pre-up wg-quick up $ifacename || true
