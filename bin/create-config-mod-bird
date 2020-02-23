@@ -8,6 +8,7 @@ bgp_path_prepend () {
     echo -n "bgp_path.prepend($BGP_AS); "
     i=$((i-1))
   done
+  echo -n "if proto = \"tincffsl3\" then { bgp_path.prepend($BGP_AS); bgp_path.prepend($BGP_AS); } "
 }
 
 bgp_local_pref () {
@@ -37,6 +38,9 @@ bird_create_host () {
 	router id $ROUTERID;
 	template bgp t_bgp_local {
 	  local as $BGP_AS;
+	}
+	protocol static static_myself {
+	  route $ROUTERID/32 via "lo";
 	}
 EOF
   get_lines $host | while read line; do
@@ -100,10 +104,15 @@ bird_create_config () {
 	protocol device {
 	  scan time 10;           # Scan interfaces every 10 seconds
 	}
-	protocol direct {
-	  interface "br*", "icvpn", "ffsl3";
+	protocol direct directffs {
+	  interface "br??";
 	  import all;
-	  export all;
+	  export none;
+	}
+	protocol direct tincffsl3 {
+	  interface "ffsl3";
+	  import all;
+	  export none;
 	}
 	template kernel t_kernel {
 	  learn;
@@ -123,7 +132,7 @@ bird_create_config () {
 	  learn;                  # Learn all alien routes from the kernel
 	  persist;                # Don't remove routes on bird shutdown
 	  scan time 10;           # Scan kernel routing table every 5 seconds
-	  import filter nodefaultroute;             # Default is import all
+	  import filter nodefaultroute;
 	  # kernel table 99;         # Kernel table to synchronize with (default: main)
 	  export filter bgprouting_ffs;
 	  device routes;

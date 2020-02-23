@@ -15,9 +15,9 @@ if [ $thisline == $sourceline ]; then
   localip=$(get_line_ip $sourceline)
   localif=$(get_line_interface $sourceline)
   localtunip=100.100.$offset.$offsetsrc
-  localtun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
+  localtun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc"
   remotetunip=100.100.$offset.$offsetdst
-  remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
+  remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst"
   portsrc=$(printf "%i%03i" $((12+$offset)) $offsetdst)
   portdst=$(printf "%i%03i" $((12+$offset)) $offsetsrc)
   publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$target'" {print $2}' ../conf/wireguard-pubkeys)
@@ -31,9 +31,9 @@ else
   localip=$(get_line_ip $targetline)
   localif=$(get_line_interface $targetline)
   localtunip=100.100.$offset.$offsetdst
-  localtun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
+  localtun6ip="fd21:711:ffff:ffff::$offset:$offsetdst"
   remotetunip=100.100.$offset.$offsetsrc
-  remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
+  remotetun6ip="fd21:711:ffff:ffff::$offset:$offsetsrc"
   publickey=$(awk -F';' '{gsub(" ","")} $1 == "'$source'" {print $2}' ../conf/wireguard-pubkeys)
   portsrc=$(printf "%i%03i" $((12+$offset)) $offsetsrc)
   portdst=$(printf "%i%03i" $((12+$offset)) $offsetdst)
@@ -60,7 +60,7 @@ mkdir -p ../output/etc/wireguard
 	
 	[Peer]
 	PublicKey = $publickey
-	AllowedIPs = 0.0.0.0/0, ::0/0
+	AllowedIPs = 0.0.0.0/0, ::/0
 EOF
 if [ x != x"$remoteip" ]; then
   echo "Endpoint = $remoteip:$portdst" >> ../output/etc/wireguard/$ifacename.conf

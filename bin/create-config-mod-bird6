@@ -45,8 +45,8 @@ EOF
         offsetdst=$(get_ip_offset $target)
         offsetsrc=$(get_ip_offset $source)
         basenet4=$(($offset*16))
-	localtunip="fd21:711:ffff:ffff::$offset:$offsetsrc:$offsetdst"
-	remotetunip="fd21:711:ffff:ffff::$offset:$offsetdst:$offsetsrc"
+	localtunip="fd21:711:ffff:ffff::$offset:$offsetsrc"
+	remotetunip="fd21:711:ffff:ffff::$offset:$offsetdst"
         echo "protocol bgp $line$target_line from t_bgp { source address $localtunip; bfd on; neighbor $remotetunip as $target_as; import filter { ${BGPLOCALPREF} if rt_import_ibgp() then accept; else reject; }; export filter { $BGBPATH if rt_export_ibgp() then accept; else reject; };}"
       fi
     done

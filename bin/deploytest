@@ -1,0 +1,47 @@
+#!/bin/bash
+
+for file in $(rsync --dry-run -rvc ../output/etc / | grep etc); do
+  if [ ! -e "../output/$file" ]; then
+    echo ../output/$file existiert nicht
+    exit 1
+  fi
+  if [ ! -e "/$file" ]; then
+    echo /$file existiert nicht, kopiert
+    cp ../output/$file /$file
+    exit 0
+  fi
+  diff -u "/$file" "../output/$file" | less
+  if ! diff -u "/$file" "../output/$file" >/dev/null 2>&1; then
+  echo Ok to overwrite /$file?
+  read a
+  case $a in
+    [yYjJ])
+      case $file in
+        *bird6*conf)
+          RESTARTBIRD6=1
+          ;;
+        *bird*conf)
+          RESTARTBIRD=1
+          ;;
+        *wireguard*conf)
+          iface=${file##*/}
+          iface=${iface%.conf}
+          WGRESTART="$WGRESTART $iface"
+          ;;
+      esac
+      cp ../output/$file /$file
+      ;;
+  esac
+  fi
+done
+for iface in $WGRESTART; do
+  echo "ifdown $iface; ifup $iface"
+done
+if [ "x$RESTARTBIRD6" == "x1" ]; then
+  echo birdc6 configure check
+  echo birdc6 configure
+fi
+if [ "x$RESTARTBIRD" == "x1" ]; then
+  echo birdc configure check
+  echo birdc configure
+fi
