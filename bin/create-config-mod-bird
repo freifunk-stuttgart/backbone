@@ -76,7 +76,7 @@ EOF
     id=$(($id+1))
     echo "$outline" | sed 's/BGPID/bgp'$id'/'
   done > ../output/etc/bird/bird_location_$host.conf
-  cat /etc/iproute2/rt_tables |sed '/^#/d; /^25[345]/d; /^0/d' | while read rt_id rt_name; do
+  cat /etc/iproute2/rt_tables |sed '/^[ \t]*#/d; /^$/d; /^25[345]/d; /^0/d' | while read rt_id rt_name; do
     cat <<-EOF
 	table tk_$rt_name;
 	protocol kernel k_$rt_name from t_kernel {
