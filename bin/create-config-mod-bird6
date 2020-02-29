@@ -16,6 +16,10 @@ bird6_create_host () {
 	template bgp t_bgp_local {
 	  local as $BGP_AS;
 	}
+	protocol static static_myself {
+	  # FIXME: add own backbone service IPv6: route $ROUTERID/128 via "lo";
+	  include "bird6_static_myself*";
+	}
 EOF
   get_lines $host | while read line; do
     get_target_line $line | while read target_line; do
@@ -89,8 +93,8 @@ bird6_create_config () {
 	}
 	function rt_export_ibgp() {
 	  if defaultroute() || net_cix() then return false;
-	  if net_martian() then return false;
 	  if net_ffs() then return true;
+	  if net_martian() then return false;
 	  return false;
 	}
 	function rt_import_ebgp() {
@@ -112,8 +116,8 @@ bird6_create_config () {
 	  krt_metric = 100;       
 	  if defaultroute() then { print "Default Route"; reject; }
 	  if net_cix() then { print "CIX Route"; reject; }
-	  if net_martian() then { reject; }
 	  if net_ffs() then { accept; }
+	  if net_martian() then { reject; }
 	  reject;
 	}
 	template bgp t_bgp from t_bgp_local {
