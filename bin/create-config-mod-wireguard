@@ -41,6 +41,8 @@ else
     error "Pubkey missing in ../conf/wireguard-pubkeys for $source $sourceline"
   fi
 fi
+echo "route $localtunip/32 via \"lo\";" >> ../output/etc/bird/bird_static_myself_wireguard.conf
+echo "route $localtun6ip/128 via \"lo\";" >> ../output/etc/bird/bird6_static_myself_wireguard.conf
 # Offset für mehrere Verbindungen pro GW-Paar
 # port: nbbb, n=12+offset, bbb=offset Standort b
 privatekey=$(cat /etc/wireguard/wg-private.key)
@@ -83,6 +85,8 @@ EOF
 
 wireguard_deploy() {
   local HOST=$1
+  echo -n > ../output/etc/bird/bird_static_myself_wireguard.conf
+  echo -n > ../output/etc/bird/bird6_static_myself_wireguard.conf
   get_lines $HOST | while read line; do
     cat ../conf/tunnels | sed '/^#/d' | awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $2 }' |
     while read target_line; do
@@ -95,4 +99,8 @@ wireguard_deploy() {
       wireguard_deploy_config $line $target_line $line
     done
   done
+  sort -u ../output/etc/bird/bird_static_myself_wireguard.conf > ../output/etc/bird/bird_static_myself_wireguard.conf.1
+  mv ../output/etc/bird/bird_static_myself_wireguard.conf.1 ../output/etc/bird/bird_static_myself_wireguard.conf
+  sort -u ../output/etc/bird/bird6_static_myself_wireguard.conf > ../output/etc/bird/bird6_static_myself_wireguard.conf.1
+  mv ../output/etc/bird/bird6_static_myself_wireguard.conf.1 ../output/etc/bird/bird6_static_myself_wireguard.conf
 }

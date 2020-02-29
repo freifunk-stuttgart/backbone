@@ -41,6 +41,7 @@ bird_create_host () {
 	}
 	protocol static static_myself {
 	  route $ROUTERID/32 via "lo";
+          include "bird_static_myself*";
 	}
 EOF
   get_lines $host | while read line; do
@@ -154,6 +155,9 @@ bird_create_config () {
 	function net_ffs() {
 	  return net ~ [ 10.190.0.0/15+ ];
 	}
+	function net_ffs_routing() {
+	  return net ~ [ 100.100.0.0/16+ ];
+	}
 	function net_rfc1918() {
 	  return net ~ [ 10.0.0.0/8+, 172.16.0.0/12+, 192.168.0.0/16+ ];
 	}
@@ -163,11 +167,13 @@ bird_create_config () {
 	}
 	function rt_import_ibgp() {
 	  if defaultroute() || net_cix() then return false;
+	  if net_ffs_routing() then return true;
 	  if net_rfc1918() then return true;
 	  return false;
 	}
 	function rt_export_ibgp() {
 	  if defaultroute() || net_cix() then return false;
+	  if net_ffs_routing() then return true;
 	  if net_rfc1918() then return true;
 	  return false;
 	}
