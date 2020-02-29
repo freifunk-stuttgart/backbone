@@ -73,6 +73,12 @@ mkdir -p ../output/etc/network/interfaces.d
 	    pre-up wg-quick up $ifacename || true
 	    pre-down wg-quick down $ifacename || true
 EOF
+      cat <<-EOF >> ../output/etc/network/interfaces.d/standortvernetzung
+	# Client OpenVPN
+	iface $ifacename inet manual
+	    pre-up wg-quick up $ifacename || true
+	    pre-down wg-quick down $ifacename || true
+EOF
 }
 
 wireguard_deploy() {
