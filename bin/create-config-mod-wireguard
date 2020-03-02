@@ -52,6 +52,7 @@ if [ "x$privatekey" == "x" ]; then
 fi
 mkdir -p ../output/etc/wireguard
   cat <<-EOF >../output/etc/wireguard/$ifacename.conf
+	# FFSBACKBONE
 	[Interface]
 	Table = off
 	SaveConfig = false
@@ -70,7 +71,8 @@ fi
 # Add $remotetunip route to /etc/network/interfaces.d/$sourceline$targetline
 mkdir -p ../output/etc/network/interfaces.d
       cat <<-EOF > ../output/etc/network/interfaces.d/$ifacename
-	# Client OpenVPN
+	# FFSBACKBONE
+	# Client Wireguard
 	iface $ifacename inet manual
 	    pre-up wg-quick up $ifacename || true
 	    pre-down wg-quick down $ifacename || true
