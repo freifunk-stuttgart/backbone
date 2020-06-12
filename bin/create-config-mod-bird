@@ -36,6 +36,11 @@ bird_create_host () {
   fi
   cat <<-EOF > ../output/etc/bird/bird_host_$host.conf
 	router id $ROUTERID;
+
+	function ip_local ()
+	{
+	  return $ROUTERID;
+	}
 	template bgp t_bgp_local {
 	  local as $BGP_AS;
 	}
@@ -190,6 +195,7 @@ bird_create_config () {
 	}
 	filter bgprouting_ffs {
 	  krt_metric = 1000;       
+	  krt_prefsrc = ip_local();
 	  if defaultroute() then { print "Default Route"; reject; }
 	  if net_cix() then { print "CIX Route"; reject; }
 	  if net_ffs() then { accept; }
