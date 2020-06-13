@@ -77,12 +77,16 @@ mkdir -p ../output/etc/network/interfaces.d
 	    pre-up wg-quick up $ifacename || true
 	    pre-down wg-quick down $ifacename || true
 EOF
+      cat <<-EOF >> ../output/etc/network/interfaces.d/standortvernetzung-wireguard
+	auto $ifacename
+EOF
 }
 
 wireguard_deploy() {
   local HOST=$1
   echo -n > ../output/etc/bird/bird_static_myself_wireguard.conf
   echo -n > ../output/etc/bird/bird6_static_myself_wireguard.conf
+  echo -n > ../output/etc/network/interfaces.d/standortvernetzung-wireguard
   get_lines $HOST | while read line; do
     cat ../conf/tunnels | sed '/^#/d' | awk -F';' '$1 ~ /^[ \t]*'$line'$/ && $3 ~ /wireguard/ { print $2 }' |
     while read target_line; do
