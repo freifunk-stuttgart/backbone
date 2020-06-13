@@ -21,4 +21,7 @@ cd /var/lib/ffs/backbone/bin; git pull; ./create-config --bird; rsync -rlHpogDtS
 birdc configure check
 birdc configure
 birdc show protocols
+birdc6 configure check
+birdc6 configure
+birdc6 show protocols
 ```
