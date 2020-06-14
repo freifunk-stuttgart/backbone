@@ -44,6 +44,7 @@ g01n01a;g05n03a;wireguard;1
 g01n01a;netinfa;wireguard;1
 g01n01b;g01n03b;wireguard;1
 g01n01b;g04n01b;wireguard;1
+g01n01b;g05n03b;wireguard;1
 g01n01b;netinfb;wireguard;1
 g01n03a;g04n01a;wireguard;1
 g01n03a;g04n02a;wireguard;1
@@ -51,6 +52,7 @@ g01n03a;g04n05a;wireguard;1
 g01n03a;g05n03a;wireguard;1
 g01n03a;netinfa;wireguard;1
 g01n03b;g04n01b;wireguard;1
+g01n03b;g05n03b;wireguard;1
 g01n03b;netinfb;wireguard;1
 g04n01a;g04n02a;wireguard;1
 g04n01a;g04n05a;wireguard;1
