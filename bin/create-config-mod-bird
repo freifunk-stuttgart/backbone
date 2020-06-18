@@ -88,7 +88,7 @@ EOF
 	protocol kernel k_$rt_name from t_kernel {
 	        table tk_$rt_name;
 	        kernel table $rt_id;
-	        export filter nodefaultroute;
+	        export all;
 	}
 	protocol pipe p_$rt_name from p_kernel {
 	        peer table tk_$rt_name;
