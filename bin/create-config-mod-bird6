@@ -21,7 +21,7 @@ bird6_create_host () {
 	  local as $BGP_AS;
 	}
 	protocol static static_myself {
-	  # FIXME: add own backbone service IPv6: route $ROUTERID/128 via "lo";
+	  route fd21:b4dc:4b00::a38:$(get_ip_offset $host)/128 via "lo";
 	  include "bird6_static_myself*";
 	}
 EOF
