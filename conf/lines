@@ -21,5 +21,5 @@ gw05n03;  g05n03b;  eth0;                2001:4ba0:ffff:150::1; 300MBit/s DECIX
 gw07n01;  g07n01a;  eth0;                         62.210.69.97; IPv4-only
 gw08n02;  g08n02a;  eth0;                      148.251.129.188; 100MBit/s, AS16276 OVH Strassburg
 munin02;  muni02a;  eth0;                                    -;
-netinfo;  netinfa;  ens2;                       89.163.142.247; 
-netinfo;  netinfb;  ens2;        2001:4ba0:fff1:f8:68:b3:29:da;
+netinfo;  netinfa;  ens2;                         88.298.230.6; NAT
+netinfo;  netinfb;  ens2; 2a01:4f8:190:5205:260:2fff:fe0b:86ba; Hetznet 1000MBit/s
