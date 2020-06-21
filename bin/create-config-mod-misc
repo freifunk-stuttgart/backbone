@@ -45,6 +45,14 @@ get_ip_offset() {
   fi
   echo $offset
 }
+get_ip6_offset() {
+  local HNAME=$1
+  offset=$(awk -F';' '$1 ~ /^[ \t]*'$HNAME'$/ {gsub("[ \t]*","",$2);gsub("[ \t]*","",$2);  print $2}' ../conf/ip6offsets)
+  if [ "x$offset" == "x" ] || [ $offset -gt 254 ]; then
+    error "Offset for $HNAME > 254, new vpn instances needed"
+  fi
+  echo $offset
+}
 get_ip_gateway() {
   local iface=$1
   local gw

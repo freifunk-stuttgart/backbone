@@ -15,13 +15,13 @@ bird6_create_host () {
 	router id $ROUTERID;
 	function ip_local ()
 	{
-	  return fd21:b4dc:4b00::a38:$(get_ip_offset $host);
+	  return fd21:b4dc:4b00::a38:$(get_ip6_offset $host);
 	}
 	template bgp t_bgp_local {
 	  local as $BGP_AS;
 	}
 	protocol static static_myself {
-	  route fd21:b4dc:4b00::a38:$(get_ip_offset $host)/128 via "lo";
+	  route fd21:b4dc:4b00::a38:$(get_ip6_offset $host)/128 via "lo";
 	  include "bird6_static_myself*";
 	}
 EOF
