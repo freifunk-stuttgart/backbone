@@ -9,8 +9,8 @@ firmware; firmwaa;  ens2;                         88.298.230.6; 1000MBit/s Hetzn
 firmware; firmwab;  ens2; 2a01:4f8:190:5205:260:2fff:fe89:3deb; 1000MBit/s Hetzner
 gw01n01;  g01n01a;  ens2;                         88.198.230.6; 1000MBit/s Hetzner
 gw01n01;  g01n01b;  ens2; 2a01:4f8:190:5205:260:2fff:feff:a939; 1000MBit/s Hetzner
-gw01n03;  g01n03a;  eth0;                       89.163.131.200; 300MBit/s myLoc/servdiscount
-gw01n03;  g01n03b;  eth0; 2001:4ba0:fff1:f8:26b:2727:103a:8a4c; 300MBit/s myLoc/servdiscount
+gw01n03;  g01n03a;  eth0;                         88.198.230.6; to be removed soon
+gw01n03;  g01n03b;  eth0; 2a01:4f8:190:5205:260:2fff:fe08:13cd; to be removed soon
 gw04n01;  g04n01a;  ens9;                       213.239.221.23; 1000MBit/s Hetzner
 gw04n01;  g04n01b;  ens9;                2a01:4f8:a0:7187::402; 1000MBit/s Hetzner
 gw04n02;  g04n02a; ens18;                             5.1.71.2; eazy IPv4-only 
