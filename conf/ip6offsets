@@ -1,0 +1,22 @@
+# Rechnername; ip6offset; Kommentar
+# ip6offset: Das was wir normalerweise in ffsbb als letztes Quadrupel verwendet haben.
+dhcp01;   251;
+dhcp02;   252;
+dhcp03;   253;
+firmware;   1;
+gw01n01;   11;
+gw01n03;  103;
+gw04n01;  401;
+gw04n02;  402;
+gw04n05;  405;
+gw05n01;  501;
+gw05n02;  502;
+gw05n03;  503;
+gw08n01;  801;
+gw08n02;  802;
+gw08n03;  803;
+gw08n04;  804;
+gw08n05;  805;
+gw08n06;  806;
+munin02;  242;
+netinfo;  243;
