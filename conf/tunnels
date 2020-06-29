@@ -83,3 +83,4 @@ g04n05a;g05n03a;wireguard;1
 g04n05a;netinfa;wireguard;1
 g05n03a;netinfa;wireguard;1
 g05n03b;netinfb;wireguard;1
+g05n03b;g09n02b;wireguard;1
