@@ -5,8 +5,10 @@
 dhcp01;   dhcp01a;  eth0;                        89.238.90.125; 100MBit/s
 dhcp02;   dhcp02a;  eth0;                      148.251.129.111;
 dhcp03;   dhcp03a;  eth0; 2a01:4f8:190:5205:260:2fff:fe32:aa19; IPv6-only
-firmware; firmwaa;  ens2;                         88.298.230.6; 1000MBit/s Hetzner
+firmware; firmwaa;  ens2;                         88.198.230.6; 1000MBit/s Hetzner
 firmware; firmwab;  ens2; 2a01:4f8:190:5205:260:2fff:fe89:3deb; 1000MBit/s Hetzner
+grafanagw; grafgwa; ens2;2a01:4f8:190:5205:260:2fff:fee0:ffe1; 1000MBit/s Hetzner
+grafanagw; grafgwb; ens2;                        88.198.230.6; 1000MBit/s Hetzner
 gw01n01;  g01n01a;  ens2;                         88.198.230.6; 1000MBit/s Hetzner
 gw01n01;  g01n01b;  ens2; 2a01:4f8:190:5205:260:2fff:feff:a939; 1000MBit/s Hetzner
 gw01n03;  g01n03a;  eth0;                         88.198.230.6; to be removed soon

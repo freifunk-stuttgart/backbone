@@ -4,6 +4,8 @@ dhcp02;   dhcp02a; 4277777252; 10.191.255.252;
 dhcp03;   dhcp03a; 4277777253; 10.191.255.253; IPv6-only
 firmware; firmwaa; 4277777001; 10.191.255.1;   1000MBit/s Hetzner
 firmware; firmwab; 4277777001; 10.191.255.1;   1000MBit/s Hetzner
+grafanagw; grafgwa; 4277777227; 10.191.255.227; 1000MBit/s Hetzner
+grafanagw; grafgwb; 4277777227; 10.191.255.227; 1000MBit/s Hetzner
 gw01n01;  g01n01a; 4277777011; 10.191.255.11;  1000MBit/s Hetzner
 gw01n01;  g01n01b; 4277777011; 10.191.255.11;  1000MBit/s Hetzner
 gw01n03;  g01n03a; 4277777013; 10.191.255.13;  100MBit/s DECIX

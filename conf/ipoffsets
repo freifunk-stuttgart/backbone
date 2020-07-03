@@ -4,6 +4,7 @@ dhcp01;   251;
 dhcp02;   252;
 dhcp03;   253;
 firmware;   1;
+grafanagw; 227;
 gw01n00;   10;
 gw01n01;   11;
 gw01n03;   13;

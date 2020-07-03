@@ -51,6 +51,8 @@ firmwab;g01n03b;wireguard;1
 firmwab;g04n01b;wireguard;1
 firmwab;g05n03b;wireguard;1
 firmwab;netinfb;wireguard;1
+grafgwa;netinfb;wireguard;1
+grafgwb;netinfa;wireguard;1
 g01n01a;g01n03a;wireguard;1
 g01n01a;g04n01a;wireguard;1
 g01n01a;g04n02a;wireguard;1
