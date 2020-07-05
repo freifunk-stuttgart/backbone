@@ -6,6 +6,8 @@ firmware; firmwaa; 4277777001; 10.191.255.1;   1000MBit/s Hetzner
 firmware; firmwab; 4277777001; 10.191.255.1;   1000MBit/s Hetzner
 grafanagw; grafgwa; 4277777227; 10.191.255.227; 1000MBit/s Hetzner
 grafanagw; grafgwb; 4277777227; 10.191.255.227; 1000MBit/s Hetzner
+graphite;  graphia; 4277777243; 10.191.255.243;
+graphite;  graphib; 4277777243; 10.191.255.243;
 gw01n01;  g01n01a; 4277777011; 10.191.255.11;  1000MBit/s Hetzner
 gw01n01;  g01n01b; 4277777011; 10.191.255.11;  1000MBit/s Hetzner
 gw01n03;  g01n03a; 4277777013; 10.191.255.13;  100MBit/s DECIX
@@ -28,5 +30,3 @@ gw08n06;  g08n06a; 4277777086; 10.191.255.86;  100MBit/s, AS16276 OVH Paris
 gw09n02;  g09n02a; 4277777092; 10.191.255.92;  1000MBit/s, IONOS
 gw09n02;  g09n02b; 4277777092; 10.191.255.92;  1000MBit/s, IONOS
 munin02;  muni02a; 4277777242; 10.191.255.242;
-netinfo;  netinfa; 4277777243; 10.191.255.243;
-netinfo;  netinfb; 4277777243; 10.191.255.243;

@@ -9,6 +9,8 @@ firmware; firmwaa;  ens2;                         88.198.230.6; 1000MBit/s Hetzn
 firmware; firmwab;  ens2; 2a01:4f8:190:5205:260:2fff:fe89:3deb; 1000MBit/s Hetzner
 grafanagw; grafgwa; ens2;2a01:4f8:190:5205:260:2fff:fee0:ffe1; 1000MBit/s Hetzner
 grafanagw; grafgwb; ens2;                        88.198.230.6; 1000MBit/s Hetzner
+graphite;  graphia;  ens2; 2a01:4f8:190:5205:260:2fff:fe0b:86ba; Hetznet 1000MBit/s
+graphite;  graphib;  ens2;                         88.198.230.6; NAT
 gw01n01;  g01n01a;  ens2;                         88.198.230.6; 1000MBit/s Hetzner
 gw01n01;  g01n01b;  ens2; 2a01:4f8:190:5205:260:2fff:feff:a939; 1000MBit/s Hetzner
 gw01n03;  g01n03a;  eth0;                         88.198.230.6; to be removed soon
@@ -25,5 +27,3 @@ gw08n02;  g08n02a;  eth0;                      148.251.129.188; 100MBit/s, AS162
 gw09n02;  g09n02a;  eth0;                       212.227.213.45; 1000MBit/s, IONOS
 gw09n02;  g09n02b;  eth0;                2001:8d8:1801:35f::92; 1000MBit/s, IONOS
 munin02;  muni02a;  eth0;                                    -;
-netinfo;  netinfa;  ens2;                         88.198.230.6; NAT
-netinfo;  netinfb;  ens2; 2a01:4f8:190:5205:260:2fff:fe0b:86ba; Hetznet 1000MBit/s
