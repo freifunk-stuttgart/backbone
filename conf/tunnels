@@ -26,9 +26,6 @@ dhcp01a;graphib;wireguard;1
 dhcp03a;g01n01b;wireguard;1
 dhcp03a;g01n03b;wireguard;1
 dhcp03a;g04n01b;wireguard;1
-dhcp03a;g09n02b;wireguard;1
-#dhcp03a;g04n02a;wireguard;1
-#dhcp03a;g04n05a;wireguard;1
 dhcp03a;g05n03b;wireguard;1
 #dhcp03a;g08n01a;wireguard;1
 #dhcp03a;g08n02a;wireguard;1
@@ -36,7 +33,10 @@ dhcp03a;g05n03b;wireguard;1
 #dhcp03a;g08n04a;wireguard;1
 #dhcp03a;g08n05a;wireguard;1
 #dhcp03a;g08n06a;wireguard;1
+dhcp03a;g09n02b;wireguard;1
 dhcp03a;graphia;wireguard;1
+dhcp03b;g04n02a;wireguard;1
+dhcp03b;g04n05a;wireguard;1
 #firmwaa;dhcp01a;wireguard;1
 #firmwaa;dhcp02a;wireguard;1
 #firmwaa;g01n01a;wireguard;1
