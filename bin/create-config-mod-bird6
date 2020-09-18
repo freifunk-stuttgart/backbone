@@ -11,6 +11,32 @@ bird6_create_host () {
     echo "BGP AS undefined for $host in ../conf/bgp_lines"
     exit 2
   fi
+  cat <<-EOF > ../output/etc/bird/bird6_general.conf
+	protocol device {
+	  scan time 10;           # Scan interfaces every 10 seconds
+	}
+	protocol direct directffs {
+	  interface "br??";
+	  import all;
+	  export none;
+	}
+	protocol static tincffsl3 {
+	  check link on;
+	  import all;
+	}
+	template kernel t_kernel {
+	  learn;
+	  persist;
+	  scan time 10;
+	  import filter nodefaultroute;
+	  export filter nodefaultroute;
+	}
+	template pipe p_kernel {
+	  import all;
+	  export all;
+	  mode transparent;
+	}
+	EOF
   cat <<-EOF > ../output/etc/bird/bird6_host_$host.conf
 	router id $ROUTERID;
 	function ip_local ()
