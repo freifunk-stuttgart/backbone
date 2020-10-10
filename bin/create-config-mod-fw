@@ -6,6 +6,14 @@ firewall_config_print () {
   # IFACES=$(ls ../output/etc/network/interfaces.d/ | grep -v standortvernetzung-wireguard | xargs echo)
   # neu, wildcard
   IFACES=$(get_lines $HOST | sed 's/$/+/')
+  case $HOST in
+    gw04n05)
+      IFACES="$IFACES ens19.255";
+      ;;
+    gw09n02)
+      IFACES="$IFACES eth1.255";
+      ;;
+  esac
   echo "In /etc/firewall.lihas.d/localhost:"
   mkdir -p ../output/etc/firewall.lihas.d/groups
   echo ffsl3 > ../output/etc/firewall.lihas.d/groups/ifacegroup-backbone
