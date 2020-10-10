@@ -1,14 +1,18 @@
 #!/bin/bash
 
 firewall_config_print () {
-  IFACES=$(ls ../output/etc/network/interfaces.d/ | grep -v standortvernetzung-wireguard | xargs echo)
+  # alt, erzwingt FW restart bei Konfigänderungen
+  # IFACES=$(ls ../output/etc/network/interfaces.d/ | grep -v standortvernetzung-wireguard | xargs echo)
+  # neu, wildcard
+  IFACES=$(get_lines $HOST | sed 's/$/+/')
   echo "In /etc/firewall.lihas.d/localhost:"
   mkdir -p ../output/etc/firewall.lihas.d/groups
   echo ffsl3 > ../output/etc/firewall.lihas.d/groups/ifacegroup-backbone
   for i in $IFACES; do
     echo $i >> ../output/etc/firewall.lihas.d/groups/ifacegroup-backbone
   done
-  ip l l | awk '$1 ~ /^[0-9]+:/ && $2 ~ /^br/ {gsub(":","",$2); print $2}' > ../output/etc/firewall.lihas.d/groups/ifacegroup-segments
+  # ip l l | awk '$1 ~ /^[0-9]+:/ && $2 ~ /^br/ {gsub(":","",$2); print $2}' > ../output/etc/firewall.lihas.d/groups/ifacegroup-segments
+  echo 'br+' > ../output/etc/firewall.lihas.d/groups/ifacegroup-segments
   cat > ../output/etc/firewall.lihas.d/localhost-ffs-bird <<-EOF
 	for in in \$(cat /etc/firewall.lihas.d/groups/ifacegroup-backbone) \$(cat /etc/firewall.lihas.d/groups/ifacegroup-segments); do
 	  for out in \$(cat /etc/firewall.lihas.d/groups/ifacegroup-backbone) \$(cat /etc/firewall.lihas.d/groups/ifacegroup-segments); do
@@ -16,7 +20,7 @@ firewall_config_print () {
 	  done
 	done
 EOF
-  for iface in $IFACES; do
+  for iface in $(cat ../output/etc/firewall.lihas.d/groups/ifacegroup-backbone); do
     if [ ! -e /etc/firewall.lihas.d/interface-$iface ]; then
       echo ln -s /etc/firewall.lihas.d/interface-backbone /etc/firewall.lihas.d/interface-$iface
     fi
