@@ -1,6 +1,7 @@
 #!/bin/bash
 
 firewall_config_print () {
+  local HOST=$1
   # alt, erzwingt FW restart bei Konfigänderungen
   # IFACES=$(ls ../output/etc/network/interfaces.d/ | grep -v standortvernetzung-wireguard | xargs echo)
   # neu, wildcard
