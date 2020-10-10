@@ -17,7 +17,7 @@ firewall_config_print () {
   cat > ../output/etc/firewall.lihas.d/localhost-ffs-bird <<-EOF
 	for in in \$(cat /etc/firewall.lihas.d/groups/ifacegroup-backbone) \$(cat /etc/firewall.lihas.d/groups/ifacegroup-segments); do
 	  IPT_FILTER "-A INPUT -i \$in -j ACCEPT"
-	  IPT_FILTER "-A INPUT -o \$in -j ACCEPT"
+	  IPT_FILTER "-A OUTPUT -o \$in -j ACCEPT"
 	  for out in \$(cat /etc/firewall.lihas.d/groups/ifacegroup-backbone) \$(cat /etc/firewall.lihas.d/groups/ifacegroup-segments); do
 	    IPT_FILTER "-A FORWARD -i \$in -o \$out -j ACCEPT"
 	  done
