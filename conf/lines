@@ -19,6 +19,8 @@ gw01n03;  g01n03b;  eth0; 2a01:4f8:190:5205:260:2fff:fe08:13cd; to be removed so
 gw04n01;  g04n01a;  ens9;                       213.239.221.23; 1000MBit/s Hetzner
 gw04n01;  g04n01b;  ens9;                2a01:4f8:a0:7187::402; 1000MBit/s Hetzner
 gw04n02;  g04n02a; ens18;                             5.1.71.2; eazy IPv4-only 
+gw04n03;  g04n03a;  eth0;                       138.201.55.210; 1000MBit/s Hetzner
+gw04n03;  g04n03b;  eth0;                2a01:4f8:172:10ce::43; 1000MBit/s Hetzner
 gw04n05;  g04n05a; ens18;                       144.76.119.251; 1000MBit/s Hetzner
 gw05n01;  g05n01a;  eth1;                       44.150.154.131; 1000 MBit/s Frankfurt
 gw05n01;  g05n01b;  eth1;                   2a0f:d604:154::131; 1000 MBit/s Frankfurt
