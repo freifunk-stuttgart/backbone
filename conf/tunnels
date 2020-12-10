@@ -33,6 +33,7 @@
 firmwab;g01n01b;wireguard;1
 firmwab;g01n03b;wireguard;1
 firmwab;g04n01b;wireguard;1
+firmwab;g04n03b;wireguard;1
 firmwab;g05n01b;wireguard;1
 firmwab;g05n03b;wireguard;1
 firmwab;g09n02b;wireguard;1
@@ -62,10 +63,12 @@ g01n03b;g05n03b;wireguard;1
 g01n03b;g09n02b;wireguard;1
 g01n03b;graphia;wireguard;1
 g04n01a;g04n02a;wireguard;1
+g04n01a;g04n03a;wireguard;1
 g04n01a;g04n05a;wireguard;1
 g04n01a;g05n03a;wireguard;1
 g04n01a;g09n02a;wireguard;1
 g04n01a;graphib;wireguard;1
+g04n01b;g04n03b;wireguard;1
 g04n01b;g05n01b;wireguard;1
 g04n01b;g05n03b;wireguard;1
 g04n01b;g09n02b;wireguard;1
@@ -73,6 +76,7 @@ g04n01b;graphia;wireguard;1
 g04n02a;g04n05a;wireguard;1
 g04n02a;g05n03a;wireguard;1
 g04n02a;graphib;wireguard;1
+g04n03b;graphia;wireguard;1
 g04n05a;g05n01a;wireguard;1
 g04n05a;g05n03a;wireguard;1
 g04n05a;g09n02a;wireguard;1
@@ -81,9 +85,11 @@ g05n01b;g05n03b;wireguard;1
 g05n01b;g09n02b;wireguard;1
 g05n03a;g09n02a;wireguard;1
 g05n03a;graphib;wireguard;1
+g05n03b;g04n03b;wireguard;1
 g05n03b;g09n02b;wireguard;1
 g05n03b;graphia;wireguard;1
 g09n02a;graphib;wireguard;1
+g09n02b;g04n03b;wireguard;1
 g09n02b;graphia;wireguard;1
 grafgwa;graphia;wireguard;1
 grafgwb;graphib;wireguard;1
