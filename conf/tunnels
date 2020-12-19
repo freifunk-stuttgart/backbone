@@ -53,11 +53,13 @@ g01n01b;g09n02b;wireguard;1
 g01n01b;graphia;wireguard;1
 g01n03a;g04n01a;wireguard;1
 g01n03a;g04n02a;wireguard;1
+g01n03a;g04n03a;wireguard;1
 g01n03a;g04n05a;wireguard;1
 g01n03a;g05n03a;wireguard;1
 g01n03a;g09n02a;wireguard;1
 g01n03a;graphib;wireguard;1
 g01n03b;g04n01b;wireguard;1
+g01n03b;g04n03b;wireguard;1
 g01n03b;g05n01b;wireguard;1
 g01n03b;g05n03b;wireguard;1
 g01n03b;g09n02b;wireguard;1
