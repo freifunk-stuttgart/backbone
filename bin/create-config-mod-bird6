@@ -22,13 +22,14 @@ bird6_create_host () {
 	}
 	protocol static tincffsl3 {
 	  check link on;
+          route fd21:b4dc:4b00::/64 via "ffsl3";
 	  import all;
 	}
 	template kernel t_kernel {
 	  learn;
 	  persist;
 	  scan time 10;
-	  import filter nodefaultroute;
+	  import none;
 	  export filter nodefaultroute;
 	}
 	template pipe p_kernel {
