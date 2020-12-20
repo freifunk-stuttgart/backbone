@@ -26,7 +26,7 @@ gw05n01;  g05n01a;  eth1;                       44.150.154.131; 1000 MBit/s Fran
 gw05n01;  g05n01b;  eth1;                   2a0f:d604:154::131; 1000 MBit/s Frankfurt
 gw05n03;  g05n03a;  eth0;                       93.186.197.153; 300MBit/s DECIX
 gw05n03;  g05n03b;  eth0;                2001:4ba0:ffff:150::1; 300MBit/s DECIX
-gw07n01;  g07n01a;  eth0;                         62.210.69.97; IPv4-only
+gw07n01;  g07n01a; ens18;                       163.172.12.135; IPv4-only
 gw08n02;  g08n02a;  eth0;                      148.251.129.188; 100MBit/s, AS16276 OVH Strassburg
 gw09n02;  g09n02a;  eth0;                       212.227.213.45; 1000MBit/s, IONOS
 gw09n02;  g09n02b;  eth0;                2001:8d8:1801:35f::92; 1000MBit/s, IONOS
