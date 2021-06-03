@@ -30,4 +30,6 @@ gw07n01;  g07n01a; ens18;                       163.172.12.135; IPv4-only
 gw08n02;  g08n02a;  eth0;                      148.251.129.188; 100MBit/s, AS16276 OVH Strassburg
 gw09n02;  g09n02a;  eth0;                       212.227.213.45; 1000MBit/s, IONOS
 gw09n02;  g09n02b;  eth0;                2001:8d8:1801:35f::92; 1000MBit/s, IONOS
+gw09n03;  g09n03a;  eth0;                        85.236.195.73; 1000MBit/s, Nepustil Zettachring 10a
+gw09n03;  g09n03b;  eth0;                  2a01:1e8:c003:1::93; 1000MBit/s, Nepustil Zettachring 10a
 munin02;  muni02a;  eth0;                                    -;

@@ -98,5 +98,9 @@ g09n02a;g07n01a;wireguard;1
 g09n02a;graphib;wireguard;1
 g09n02b;g04n03b;wireguard;1
 g09n02b;graphia;wireguard;1
+g09n03b;g04n03b;wireguard;1
+g09n03b;g01n03b;wireguard;1
+g09n03a;g05n03a;wireguard;1
+g09n03b;g05n03b;wireguard;1
 grafgwa;graphia;wireguard;1
 grafgwb;graphib;wireguard;1
