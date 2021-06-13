@@ -1,0 +1,44 @@
+#!/bin/bash 
+get_ip6_policy_upstreams() {
+  awk -F';' '/^#/ {next} {print $1}' ../conf/ip6_policy_nets | sort | uniq
+}
+
+get_ip6_policy_exits_for_upstream() {
+  upstream=$1
+  awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $2}' ../conf/ip6_policy_exit_routers
+}
+
+bird6_create_ip6_policy() {
+  rm ../output/etc/bird/bird6_ffs_ipv6_policy.conf
+  get_ip6_policy_upstreams | while read upstream; do
+    cat <<-EOF >> ../output/etc/bird/bird6_ffs_ipv6_policy.conf
+	table ${upstream};
+	protocol static default_${upstream} {
+	  table ${upstream};
+EOF
+    get_ip6_policy_exits_for_upstream "$upstream" | while read exit_host; do
+      echo Generating config for $upstream exit $exit_host
+      ip6_exit_offset=$(get_ip6_offset "$exit_host")
+      ip6_exit="fd21:b4dc:4b00::a38:$ip6_exit_offset"
+      echo "  route ::/0 recursive ${ip6_exit};" >> ../output/etc/bird/bird6_ffs_ipv6_policy.conf
+    done
+    cat <<-EOF >> ../output/etc/bird/bird6_ffs_ipv6_policy.conf
+	}
+	protocol pipe p_${upstream} {
+	  peer table ${upstream};
+	  import filter nodefaultroute;
+	  export filter nodefaultroute;
+	  mode transparent;
+	}
+	protocol kernel k_${upstream} {
+	  table ${upstream};
+	  kernel table 3002;
+	  export all;
+	  import none;
+	  scan time 10;
+	}
+EOF
+  done
+}
+
+

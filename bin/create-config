@@ -52,6 +52,7 @@ done
 [ x1 == x"$DO_OPENVPN" ] && . ./create-config-mod-openvpn
 [ x1 == x"$DO_BIRD" ] && . ./create-config-mod-bird
 [ x1 == x"$DO_BIRD" ] && . ./create-config-mod-bird6
+[ x1 == x"$DO_BIRD" ] && . ./create-config-mod-bird6-policy
 [ x1 == x"$DO_LIHAS_FW" ] && . ./create-config-mod-fw
 . ./create-config-mod-wireguard
 
@@ -84,6 +85,7 @@ wireguard_deploy $HOSTNAME
 [ x1 == x"$DO_BIRD" ] && bird_create_host $HOSTNAME
 [ x1 == x"$DO_BIRD" ] && bird6_create_config
 [ x1 == x"$DO_BIRD" ] && bird6_create_host $HOSTNAME
+[ x1 == x"$DO_BIRD" ] && bird6_create_ip6_policy
 
 [ x1 == x"$DO_LIHAS_FW" ] && firewall_config_print $HOSTNAME
 
