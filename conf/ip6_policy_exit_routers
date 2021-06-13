@@ -1,0 +1,4 @@
+# Policy Source Routing. This file defines which routers provide connectivity for the given upstreams, i.e. can route packets with source addresses from the networks defined in ip6_policy_nets to the internet.
+# upstreamname;Hostname of router
+ffrheinland;gw01n03
+stuttgartix;gw09n03

@@ -1,0 +1,4 @@
+# Policy Source Routing. All packets with source IP from the given nets need to be routed via one of the exit routers given in ip6_policy_exit_routers
+# upstreamname;network
+ffrheinland;2a03:2260:3016::/48
+stuttgartix;2a01:1e8:c003::/48
