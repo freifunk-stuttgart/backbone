@@ -8,9 +8,25 @@ get_ip6_policy_exits_for_upstream() {
   awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $2}' ../conf/ip6_policy_exit_routers
 }
 
-bird6_create_ip6_policy() {
-  rm ../output/etc/bird/bird6_ffs_ipv6_policy.conf
+get_ip6_policy_table_id_for_upstream() {
+  upstream=$1
+  awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $3}' ../conf/ip6_policy_nets
+}
+
+bird6_create_iproute_rt_table() {
+  mkdir -p ../output/etc/iproute2/rt_tables.d/
+  rm ../output/etc/iproute2/rt_tables.d/ffs_ip6_policy.conf
   get_ip6_policy_upstreams | while read upstream; do
+    table_id=$(get_ip6_policy_table_id_for_upstream "$upstream")
+    echo "${table_id} ${upstream}" >> ../output/etc/iproute2/rt_tables.d/ffs_ip6_policy.conf
+  done
+}
+
+bird6_create_ip6_policy() {
+  bird6_create_iproute_rt_table
+  rm ../output/etc/bird/bird6_ffs_ipv6_policy.conf || true
+  get_ip6_policy_upstreams | while read upstream; do
+    table_id=$(get_ip6_policy_table_id_for_upstream "$upstream")
     cat <<-EOF >> ../output/etc/bird/bird6_ffs_ipv6_policy.conf
 	table ${upstream};
 	protocol static default_${upstream} {
@@ -32,7 +48,7 @@ EOF
 	}
 	protocol kernel k_${upstream} {
 	  table ${upstream};
-	  kernel table 3002;
+	  kernel table ${table_id};
 	  export all;
 	  import none;
 	  scan time 10;
