@@ -1,28 +1,40 @@
 #!/bin/bash 
-get_ip6_policy_upstreams() {
+ip6_policy_get_upstreams() {
   awk -F';' '/^#/ {next} {print $1}' ../conf/ip6_policy_nets | sort | uniq
 }
 
-get_ip6_policy_networks_for_upstream() {
+ip6_policy_get_networks_for_upstream() {
   upstream=$1
   awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $2}' ../conf/ip6_policy_nets
 }
 
-get_ip6_policy_exits_for_upstream() {
+ip6_policy_get_exits_for_upstream() {
   upstream=$1
   awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $2}' ../conf/ip6_policy_exit_routers
 }
 
-get_ip6_policy_table_id_for_upstream() {
+ip6_policy_get_table_id_for_upstream() {
   upstream=$1
   awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $3}' ../conf/ip6_policy_nets
+}
+
+ip6_policy_am_i_exit_for_upstream() {
+  upstream=$1
+
+  exits_found=$(awk -F';' '/^#/ {next} $1 == "'$upstream'" && $2 == "'$HOSTNAME'" {print $2}' ../conf/ip6_policy_exit_routers | wc -l)
+
+  if [ $exits_found -gt 0 ]; then
+    return 0
+  fi
+
+  return 1
 }
 
 bird6_create_iproute_rt_table() {
   mkdir -p ../output/etc/iproute2/rt_tables.d/
   rm ../output/etc/iproute2/rt_tables.d/ffs_ip6_policy.conf
-  get_ip6_policy_upstreams | while read upstream; do
-    table_id=$(get_ip6_policy_table_id_for_upstream "$upstream")
+  ip6_policy_get_upstreams | while read upstream; do
+    table_id=$(ip6_policy_get_table_id_for_upstream "$upstream")
     echo "${table_id} ${upstream}" >> ../output/etc/iproute2/rt_tables.d/ffs_ip6_policy.conf
   done
 }
@@ -30,14 +42,14 @@ bird6_create_iproute_rt_table() {
 bird6_create_ip6_policy() {
   bird6_create_iproute_rt_table
   rm ../output/etc/bird/bird6_ffs_ipv6_policy.conf || true
-  get_ip6_policy_upstreams | while read upstream; do
-    table_id=$(get_ip6_policy_table_id_for_upstream "$upstream")
+  ip6_policy_get_upstreams | while read upstream; do
+    table_id=$(ip6_policy_get_table_id_for_upstream "$upstream")
     cat <<-EOF >> ../output/etc/bird/bird6_ffs_ipv6_policy.conf
 	table ${upstream};
 	protocol static default_${upstream} {
 	  table ${upstream};
 EOF
-    get_ip6_policy_exits_for_upstream "$upstream" | while read exit_host; do
+    ip6_policy_get_exits_for_upstream "$upstream" | while read exit_host; do
       echo Generating config for $upstream exit $exit_host
       ip6_exit_offset=$(get_ip6_offset "$exit_host")
       ip6_exit="fd21:b4dc:4b00::a38:$ip6_exit_offset"
@@ -64,10 +76,12 @@ EOF
 
 bird6_create_policy_rule_script() {
   mkdir -p ../output/etc/ffs
-  echo "/bin/sh" > ../output/etc/ffs/ip6-policy.sh
-  get_ip6_policy_upstreams | while read upstream; do
-    get_ip6_policy_networks_for_upstream "$upstream" | while read network; do
-      echo "/sbin/ip -6 rule add from ${network} pref 10000 lookup ${upstream}" >> ../output/etc/ffs/ip6-policy.sh
+  echo "#!/bin/sh" > ../output/etc/ffs/ip6-policy.sh
+  ip6_policy_get_upstreams | while read upstream; do
+    ip6_policy_get_networks_for_upstream "$upstream" | while read network; do
+      if ! ip6_policy_am_i_exit_for_upstream "$upstream"; then
+        echo "/sbin/ip -6 rule add from ${network} pref 10000 lookup ${upstream}" >> ../output/etc/ffs/ip6-policy.sh
+      fi
     done
   done
   chmod +x ../output/etc/ffs/ip6-policy.sh
