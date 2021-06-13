@@ -86,6 +86,7 @@ wireguard_deploy $HOSTNAME
 [ x1 == x"$DO_BIRD" ] && bird6_create_config
 [ x1 == x"$DO_BIRD" ] && bird6_create_host $HOSTNAME
 [ x1 == x"$DO_BIRD" ] && bird6_create_ip6_policy
+[ x1 == x"$DO_BIRD" ] && bird6_create_policy_rules
 
 [ x1 == x"$DO_LIHAS_FW" ] && firewall_config_print $HOSTNAME
 

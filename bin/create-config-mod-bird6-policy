@@ -3,6 +3,11 @@ get_ip6_policy_upstreams() {
   awk -F';' '/^#/ {next} {print $1}' ../conf/ip6_policy_nets | sort | uniq
 }
 
+get_ip6_policy_networks_for_upstream() {
+  upstream=$1
+  awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $2}' ../conf/ip6_policy_nets
+}
+
 get_ip6_policy_exits_for_upstream() {
   upstream=$1
   awk -F';' '/^#/ {next} $1 == "'$upstream'" {print $2}' ../conf/ip6_policy_exit_routers
@@ -57,4 +62,36 @@ EOF
   done
 }
 
+bird6_create_policy_rule_script() {
+  mkdir -p ../output/etc/ffs
+  echo "/bin/sh" > ../output/etc/ffs/ip6-policy.sh
+  get_ip6_policy_upstreams | while read upstream; do
+    get_ip6_policy_networks_for_upstream "$upstream" | while read network; do
+      echo "/sbin/ip -6 rule add from ${network} pref 10000 lookup ${upstream}" >> ../output/etc/ffs/ip6-policy.sh
+    done
+  done
+  chmod +x ../output/etc/ffs/ip6-policy.sh
 
+  bird6_create_policy_rule_script_unitfile
+}
+
+bird6_create_policy_rule_script_unitfile() {
+  mkdir -p ../output/etc/systemd/system
+  cat <<-EOF > ../output/etc/systemd/system/ffs-ip6-policy.service
+	[Unit]
+	Description=FFS IP6 Policy Source Routing Rules
+	After=network.target
+
+	[Service]
+	Type=oneshot
+	ExecStart=/etc/ffs/ip6-policy.sh
+
+	[Install]
+	WantedBy=multi-user.target
+EOF
+}
+
+bird6_create_policy_rules() {
+  bird6_create_policy_rule_script
+  bird6_create_policy_rule_script_unitfile
+}
