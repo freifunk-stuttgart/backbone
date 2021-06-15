@@ -94,14 +94,13 @@ bird6_create_policy_rule_script_unitfile() {
   cat <<-EOF > ../output/etc/systemd/system/ffs-ip6-policy.service
 	[Unit]
 	Description=FFS IP6 Policy Source Routing Rules
-	After=network.target
 
 	[Service]
 	Type=oneshot
 	ExecStart=/etc/ffs/ip6-policy.sh
 
 	[Install]
-	WantedBy=multi-user.target
+	WantedBy=network.target
 EOF
 }
 
