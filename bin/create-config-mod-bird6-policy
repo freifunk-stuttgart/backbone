@@ -80,9 +80,11 @@ bird6_create_policy_rule_script() {
   echo "set -eu" >> ../output/etc/ffs/ip6-policy.sh
   ip6_policy_get_upstreams | while read upstream; do
     ip6_policy_get_networks_for_upstream "$upstream" | while read network; do
+      prefixsize=${network#*/}
+      let pref=9000-prefixsize
       if ! ip6_policy_am_i_exit_for_upstream "$upstream"; then
         echo "/sbin/ip -6 rule delete from ${network} || true" >> ../output/etc/ffs/ip6-policy.sh
-        echo "/sbin/ip -6 rule add from ${network} pref 10000 lookup ${upstream}" >> ../output/etc/ffs/ip6-policy.sh
+        echo "/sbin/ip -6 rule add from ${network} pref $pref lookup ${upstream}" >> ../output/etc/ffs/ip6-policy.sh
       fi
     done
   done
