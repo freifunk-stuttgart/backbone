@@ -89,6 +89,7 @@ EOF
 	        kernel table $rt_id;
 	        import none;
 	        export all;
+	        device routes;
 	}
 	protocol pipe p_$rt_name from p_kernel {
 	        peer table tk_$rt_name;
