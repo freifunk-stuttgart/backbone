@@ -147,8 +147,8 @@ bird_create_config () {
 	  export filter nodefaultroute;
 	}
 	template pipe p_kernel {
-	  import all;
-	  export all;
+	  import filter nodefaulroute;
+	  export filter nodefaultroute;
 	  mode transparent;
 	}
 	EOF
