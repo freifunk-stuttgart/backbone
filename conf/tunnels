@@ -65,6 +65,7 @@ g04n02a;g05n03a;wireguard;1
 g04n02a;graphib;wireguard;1
 g04n03b;graphia;wireguard;1
 g04n03a;g04n05a;wireguard;1
+g04n03b;g05n02b;wireguard;1
 g04n05a;g05n01a;wireguard;1
 g04n05a;g05n02a;wireguard;1
 g04n05a;g05n03a;wireguard;1
