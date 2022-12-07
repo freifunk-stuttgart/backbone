@@ -4,3 +4,4 @@ ffrheinland;2a03:2260:3016::/48;1001
 stuttgartix;2a01:1e8:c003::/48;1002
 hetzner_ffs05;2a01:4f8:172:fe00::/56;1143
 servd_gw05;2001:4ba0:92c1:800::/56;1153
+hws10_gw05;2a0f:d606:9bfe::/56;1152
