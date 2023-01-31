@@ -21,7 +21,7 @@ gw04n01;  g04n01b;  ens9;                2a01:4f8:a0:7187::402; 1000MBit/s Hetzn
 gw04n02;  g04n02a; ens18;                             5.1.71.2; eazy IPv4-only 
 gw04n03;  g04n03a;  eth0;                       138.201.55.210; 1000MBit/s Hetzner
 gw04n03;  g04n03b;  eth0;                2a01:4f8:172:10ce::43; 1000MBit/s Hetzner
-gw04n05;  g04n05a; ens18;                         78.46.42.841; 1000MBit/s Hetzner
+gw04n05;  g04n05a; ens18;                          78.46.42.84; 1000MBit/s Hetzner
 gw05n01;  g05n01a;  eth1;                       45.150.154.131; 1000 MBit/s Frankfurt
 gw05n01;  g05n01b;  eth1;                   2a0f:d604:154::131; 1000 MBit/s Frankfurt
 gw05n02;  g05n02a;  eth0;                       45.150.155.254; 100 MBit/s Stuttgart
