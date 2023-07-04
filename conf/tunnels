@@ -22,6 +22,7 @@ g01n03b;g05n01b;wireguard;1
 g01n03b;g05n02b;wireguard;1
 g01n03a;g05n03a;wireguard;1
 g01n03b;g05n03b;wireguard;1
+g01n03b;g09n03b;wireguard;1
 g04n03a;g04n05a;wireguard;1
 g04n03b;g05n02b;wireguard;1
 g04n03b;g05n03b;wireguard;1
@@ -31,7 +32,6 @@ g04n05a;g05n03a;wireguard;1
 g05n01b;g05n02b;wireguard;1
 g05n01b;g05n03b;wireguard;1
 g05n02b;g05n03b;wireguard;1
-g09n03b;g01n03b;wireguard;1
 g09n03b;g04n03b;wireguard;1
 g09n03a;g04n05a;wireguard;1
 g09n03b;g05n02b;wireguard;1
