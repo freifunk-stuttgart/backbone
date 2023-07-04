@@ -1,4 +1,10 @@
 # line1;line2;technik;priority
+dhcp03a;g01n03b;wireguard;1
+dhcp03b;g01n03a;wireguard;1
+dhcp03a;g04n03b;wireguard;1
+dhcp03b;g04n03a;wireguard;1
+dhcp03a;g05n03b;wireguard;1
+dhcp03b;g05n03a;wireguard;1
 dhcp03a;g09n03b;wireguard;1
 dhcp03b;g09n03a;wireguard;1
 firmwab;g01n03b;wireguard;1
