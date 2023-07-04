@@ -8,10 +8,6 @@ dhcp03;   dhcp03a;  eth0;              2a01:4f8:200:1017::1253; 1000Mbit/s Hetzn
 dhcp03;   dhcp03b;  eth0;                         144.76.136.9; NAT
 firmware; firmwaa; ens18;                         144.76.136.9; 1000MBit/s Hetzner
 firmware; firmwab; ens18;              2a01:4f8:200:1017::1001; 1000MBit/s Hetzner
-grafanagw; grafgwa; ens18;              2a01:4f8:200:1017::227; 1000MBit/s Hetzner
-grafanagw; grafgwb; ens18;                        144.76.136.9; 1000MBit/s Hetzner - NAT
-graphite;  graphia; ens18;              2a01:4f8:200:1017::243; Hetznet 1000MBit/s
-graphite;  graphib; ens18;                        144.76.136.9; NAT
 gw01n03;  g01n03a;  eth0;                         144.76.136.9; NAT
 gw01n03;  g01n03b;  eth0;              2a01:4f8:200:1017::1013; 1000MBit/s Hetzner
 gw04n01;  g04n01a;  ens9;                       213.239.221.23; 1000MBit/s Hetzner
