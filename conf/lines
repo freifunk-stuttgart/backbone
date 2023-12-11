@@ -34,4 +34,5 @@ gw09n09;  g09n09a;  eth0;                        141.72.249.37; 1Gbit/s, Selfnet
 gw09n09;  g09n09b;  eth0; 2001:7c7:212f:c980:682f:20ff:fe73:a2cf; 1Gbit/s, Selfnet
 munin02;  muni02a;  eth0;                                    -;
 ffs05r;   ffs05ra;  eth0;                                    -;
+ffs05r;   ffs05rb;  eth0;               2a01:4f8:172:10ce::176;
 pveud;    pveuda;   eth0;                                    -; NAT
