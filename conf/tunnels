@@ -37,6 +37,11 @@ g05n01b;g05n03b;wireguard;1
 g05n02b;g05n03b;wireguard;1
 g05n03a;ffs05ra;wireguard;1
 g05n03b;ffs05rb;wireguard;1
+g06n01a;g01n03a;wireguard;1
+g06n01b;g01n03b;wireguard;1
+g06n01a;g04n05a;wireguard;1
+g06n01a;g09n03a;wireguard;1
+g06n01b;g09n03b;wireguard;1
 g09n03b;g04n03b;wireguard;1
 g09n03a;g04n05a;wireguard;1
 g09n03b;g05n02b;wireguard;1
