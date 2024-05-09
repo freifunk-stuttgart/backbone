@@ -32,6 +32,8 @@ gw09n02;  g09n02a;  eth0;                       212.227.213.45; 1000MBit/s, IONO
 gw09n02;  g09n02b;  eth0;                2001:8d8:1801:35f::92; 1000MBit/s, IONOS
 gw09n03;  g09n03a;  eth0;                        85.236.195.73; 10GBit/s, Nepustil Zettachring 10a
 gw09n03;  g09n03b;  eth0;                  2a01:1e8:c003:1::93; 10GBit/s, Nepustil Zettachring 10a
+gw09n04;  g09n04a; ens18;                         91.216.35.18; 10GBit/s, AS208772, Zettachring 10a
+gw09n04;  g09n04b; ens18;                  2a0f:d607:0:fe00::1; 10GBit/s, AS208772, Zettachring 10a
 gw09n09;  g09n09a;  eth0;                        141.72.249.37; 1Gbit/s, Selfnet
 gw09n09;  g09n09b;  eth0; 2001:7c7:212f:c980:682f:20ff:fe73:a2cf; 1Gbit/s, Selfnet
 munin02;  muni02a;  eth0;                                    -;
