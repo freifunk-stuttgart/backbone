@@ -4,7 +4,6 @@ dhcp02;   dhcp02a; 4277777252; 10.191.255.252;
 dhcp03;   dhcp03a; 4277777253; 10.191.255.253; IPv6-only
 dhcp03;   dhcp03b; 4277777253; 10.191.255.253; IPv4-NAT
 firmware; firmwaa; 4277777001; 10.191.255.1;   1000MBit/s Hetzner
-firmware; firmwab; 4277777001; 10.191.255.1;   1000MBit/s Hetzner
 gw01n03;  g01n03a; 4277777013; 10.191.255.13;  100MBit/s DECIX
 gw01n03;  g01n03b; 4277777013; 10.191.255.13;  100MBit/s DECIX
 gw04n01;  g04n01a; 4277777041; 10.191.255.41;  1000MBit/s Hetzner
