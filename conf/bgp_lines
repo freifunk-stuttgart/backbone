@@ -37,3 +37,5 @@ ffs05r;   ffs05rb; 4277777176; 10.191.255.176;
 ffs13r;   ffs13ra; 4277777186; 10.191.255.186;
 munin02;  muni02a; 4277777242; 10.191.255.242;
 mobrtr;   mobrtra;  4277777170; 10.191.255.170; Starlink, 5G/LTE O2/Vodafone
+nrb-backbonetest2;   bbtesta;  4277777192; 10.191.255.192; 
+nrb-backbonetest2;   bbtestb;  4277777192; 10.191.255.192;

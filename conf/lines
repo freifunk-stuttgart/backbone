@@ -40,3 +40,5 @@ ffs05r;   ffs05ra;  eth0;                                    -;
 ffs05r;   ffs05rb;  eth0;               2a01:4f8:172:10ce::176;
 ffs13r;   ffs13ra;  eth0;                                    -; NAT
 mobrtr;   mobrtra;  eth0;                                    -; NAT
+nrb-backbonetest2;   bbtesta;  eth0; -; NAT
+nrb-backbonetest2;   bbtestb;  eth0; -; NAT
