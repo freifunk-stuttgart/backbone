@@ -21,8 +21,6 @@ gw05n01;  g05n01a;  eth1;                       45.150.154.131; 1000 MBit/s Fran
 gw05n01;  g05n01b;  eth1;                   2a0f:d604:154::131; 1000 MBit/s Frankfurt
 gw05n02;  g05n02a;  eth0;                       45.150.155.254; 100 MBit/s Stuttgart
 gw05n02;  g05n02b;  eth0;                   2a0f:d606:155::254; 100 MBit/s Stuttgart
-gw05n03;  g05n03a;  eth0;                       93.186.197.153; 300MBit/s DECIX
-gw05n03;  g05n03b;  eth0;                2001:4ba0:ffff:150::1; 300MBit/s DECIX
 gw06n01;  g06n01a;  eth0;                      194.107.126.144; 10GBit/s, Avoro
 gw06n01;  g06n01b;  eth0;                2a0d:5940:88:ffff::61; 10GBit/s, Avoro
 gw07n01;  g07n01a; ens18;                       163.172.12.135; IPv4-only
