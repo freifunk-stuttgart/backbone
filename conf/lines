@@ -4,8 +4,8 @@
 # fixe IP: extern erreichbare IP, wird nur fuer VPN-server benoetigt
 dhcp01;   dhcp01a;  eth0;                        89.238.90.125; 100MBit/s
 dhcp02;   dhcp02a;  eth0;                      148.251.129.111;
-dhcp03;   dhcp03a;  eth0;              2a01:4f8:200:1017::1253; 1000Mbit/s Hetzner
-dhcp03;   dhcp03b;  eth0;                         144.76.136.9; NAT
+dhcp03;   dhcp03a;  eth0;                   2a0f:d607:e:2::253; z10a-ffs13
+dhcp03;   dhcp03b;  eth0;                        91.216.35.193; nat.pve.as208772.net
 firmware; firmwaa; eth0;               2a0f:d607:e:2::195; 1000MBit/s pvez10a
 gw01n03;  g01n03a;  eth0;                         144.76.136.9; NAT
 gw01n03;  g01n03b;  eth0;              2a01:4f8:200:1017::1013; 1000MBit/s Hetzner
