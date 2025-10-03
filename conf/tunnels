@@ -3,6 +3,7 @@ dhcp03a;g01n03b;wireguard;1
 dhcp03a;g04n03b;wireguard;1
 dhcp03a;g05n01b;wireguard;1
 dhcp03a;g05n02b;wireguard;1
+dhcp03a;g06n01b;wireguard;1
 dhcp03a;g09n03b;wireguard;1
 dhcp03a;g09n04b;wireguard;1
 dhcp03b;g01n03a;wireguard;1
@@ -14,6 +15,7 @@ firmwaa;g01n03b;wireguard;1
 firmwaa;g04n03b;wireguard;1
 firmwaa;g05n01b;wireguard;1
 firmwaa;g05n02b;wireguard;1
+firmwaa;g06n01b;wireguard;1
 firmwaa;g09n03b;wireguard;1
 g01n03a;ffs05ra;wireguard;1
 g01n03a;ffs13ra;wireguard;1
@@ -32,6 +34,7 @@ g04n03b;g05n02b;wireguard;1
 g04n05a;g05n01a;wireguard;1
 g04n05a;g05n02a;wireguard;1
 g04n05a;g09n04a;wireguard;1
+g04n06b;g06n01b;wireguard;1
 g05n01a;ffs05ra;wireguard;1
 g05n01a;ffs13ra;wireguard;1
 g05n01b;ffs05rb;wireguard;1
@@ -43,13 +46,13 @@ g05n02a;ffs13ra;wireguard;1
 g05n02b;ffs05rb;wireguard;1
 g05n02b;g04n06b;wireguard;1
 g05n02b;g09n04b;wireguard;1
-g06n01a;ffs13ra;wireguard;1
-g06n01a;g01n03a;wireguard;1
-g06n01a;g04n05a;wireguard;1
-g06n01a;g09n03a;wireguard;1
-g06n01a;g09n04a;wireguard;1
+g06n01b;ffs13rb;wireguard;1
 g06n01b;g01n03b;wireguard;1
+g06n01b;g01n03b;wireguard;1
+g06n01b;g04n05b;wireguard;1
 g06n01b;g09n03b;wireguard;1
+g06n01b;g09n03b;wireguard;1
+g06n01b;g09n04b;wireguard;1
 g06n01b;g09n04b;wireguard;1
 g09n03a;bbtesta;wireguard;1
 g09n03a;ffs05ra;wireguard;1
