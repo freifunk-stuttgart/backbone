@@ -29,6 +29,8 @@ for file in $(rsync --dry-run -rvc ../output/etc / | grep etc); do
           iface=${iface%.conf}
           WGRESTART="$WGRESTART $iface"
           ;;
+	*ffs-ip6-policy.service)
+          RELOADSYSTEMD="1"
       esac
       cp ../output/$file /$file
       ;;
@@ -45,4 +47,8 @@ fi
 if [ "x$RESTARTBIRD" == "x1" ]; then
   echo birdc configure check
   echo birdc configure
+fi
+if [ "x$RELOADSYSTEMD" == "x1" ]; then
+  echo systemctl daemon-reload
+  echo systemctl enable --now ffs-ip6-policy.service
 fi
