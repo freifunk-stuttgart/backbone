@@ -7,13 +7,6 @@ dhcp02;   dhcp02a;  eth0;                      148.251.129.111;
 dhcp03;   dhcp03a;  eth0;                   2a0f:d607:e:2::253; z10a-ffs13
 dhcp03;   dhcp03b;  eth0;                        91.216.35.193; nat.pve.as208772.net
 firmware; firmwaa; eth0;               2a0f:d607:e:2::195; 1000MBit/s pvez10a
-gw01n03;  g01n03a;  eth0;                         144.76.136.9; NAT
-gw01n03;  g01n03b;  eth0;              2a01:4f8:200:1017::1013; 1000MBit/s Hetzner
-gw04n01;  g04n01a;  ens9;                       213.239.221.23; 1000MBit/s Hetzner
-gw04n01;  g04n01b;  ens9;                2a01:4f8:a0:7187::402; 1000MBit/s Hetzner
-gw04n02;  g04n02a; ens18;                             5.1.71.2; eazy IPv4-only 
-gw04n03;  g04n03a;  eth0;                       138.201.55.210; 1000MBit/s Hetzner
-gw04n03;  g04n03b;  eth0;                2a01:4f8:172:10ce::43; 1000MBit/s Hetzner
 gw04n05;  g04n05a; ens18;                          78.46.42.84; 1000MBit/s Hetzner
 gw04n06;  g04n06a;  eth0;                                    -; NAT
 gw04n06;  g04n06b;  eth0;                2a01:4f8:172:10ce::46; 1000MBit/s Hetzner
@@ -23,20 +16,13 @@ gw05n02;  g05n02a;  eth0;                       45.150.155.254; 100 MBit/s Stutt
 gw05n02;  g05n02b;  eth0;                   2a0f:d606:155::254; 100 MBit/s Stuttgart
 gw06n01;  g06n01a;  eth0;                          78.46.42.84; 1GBit/s, Hetzner
 gw06n01;  g06n01b;  eth0;                2a01:4f8:141:4083::61; 1GBit/s, Hetzner
-gw07n01;  g07n01a; ens18;                       163.172.12.135; IPv4-only
-gw08n02;  g08n02a;  eth0;                      148.251.129.188; 100MBit/s, AS16276 OVH Strassburg
-gw09n02;  g09n02a;  eth0;                       212.227.213.45; 1000MBit/s, IONOS
-gw09n02;  g09n02b;  eth0;                2001:8d8:1801:35f::92; 1000MBit/s, IONOS
 gw09n03;  g09n03a;  eth0;                        85.236.195.73; 10GBit/s, Nepustil Zettachring 10a
 gw09n03;  g09n03b;  eth0;                  2a01:1e8:c003:1::93; 10GBit/s, Nepustil Zettachring 10a
 gw09n04;  g09n04a; ens18;                         91.216.35.18; 10GBit/s, AS208772, Zettachring 10a
 gw09n04;  g09n04b; ens18;                  2a0f:d607:0:fe00::1; 10GBit/s, AS208772, Zettachring 10a
 gw09n09;  g09n09a;  eth0;                        141.72.249.37; 1Gbit/s, Selfnet
 gw09n09;  g09n09b;  eth0; 2001:7c7:212f:c980:682f:20ff:fe73:a2cf; 1Gbit/s, Selfnet
-munin02;  muni02a;  eth0;                                    -;
 ffs05r;   ffs05ra;  eth0;                                    -;
 ffs05r;   ffs05rb;  eth0;               2a01:4f8:172:10ce::176;
 ffs13r;   ffs13ra;  eth0;                                    -; NAT
 mobrtr;   mobrtra;  eth0;                                    -; NAT
-nrb-backbonetest2;   bbtesta;  eth0; -; NAT
-nrb-backbonetest2;   bbtestb;  eth0; -; NAT
