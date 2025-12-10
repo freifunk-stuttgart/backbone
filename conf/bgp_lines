@@ -17,8 +17,6 @@ gw09n03;  g09n03a; 4277777093; 10.191.255.93;  1000MBit/s, Nepustil Zettachring 
 gw09n03;  g09n03b; 4277777093; 10.191.255.93;  1000MBit/s, Nepustil Zettachring 10a
 gw09n04;  g09n04a; 4277777094; 10.191.255.94;  10GBit/s, AS208772, Zettachring 10a
 gw09n04;  g09n04b; 4277777094; 10.191.255.94;  10GBit/s, AS208772, Zettachring 10a
-gw09n09;  g09n09a; 4277777099; 10.191.255.99;  1GBit/s, Selfnet
-gw09n09;  g09n09b; 4277777099; 10.191.255.99;  1GBit/s, Selfnet
 ffs05r;   ffs05ra; 4277777176; 10.191.255.176;
 ffs05r;   ffs05rb; 4277777176; 10.191.255.176;
 ffs13r;   ffs13ra; 4277777186; 10.191.255.186;
